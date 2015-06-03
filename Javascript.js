@@ -13,13 +13,17 @@ var getFirstTransformation = function (collection, transformer) {
     return t;
 };
 
-var bfs = function (validator, node) {
+var bfs = function (validator, node, results) {
+    results = results || [];
     var bfsWithValidator = _.partial(bfs, validator);
     if (validator(node)) {
-        return node;
+        results.push(node);
     } else {
-        return getFirstTransformation(node.children, bfsWithValidator);
+        _.map(node.children, function (child) {
+            bfsWithValidator(child, results);
+        })
     }
+    return results;
 };
 
 var tagHasAttribute = function (searchAttribute, tag) {
