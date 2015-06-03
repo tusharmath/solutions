@@ -16,14 +16,15 @@ var invokeOnParent = function (cb, node) {
 var invokeOnChildren = function (cb, node) {
     _.each(node.children, cb);
 };
-var recursiveSearch = function (searchStrategy, sieve, results, node) {
+var recursiveSearch = function (invokeOn, sieve, results, node) {
+    var partialRecursion = _.partial(recursiveSearch, invokeOn, sieve, results);
     if (!node) {
         return;
     }
     if (sieve(node)) {
         results.push(node);
     } else {
-        searchStrategy(_.partial(recursiveSearch, searchStrategy, sieve, results), node);
+        invokeOn(partialRecursion, node);
     }
     return results;
 };

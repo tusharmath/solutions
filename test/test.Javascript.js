@@ -5,7 +5,7 @@
 var chai = require('chai');
 var should = chai.should();
 
-var Tag = require('../Javascript');
+var Tag = require('../Tag');
 describe('Tag', function () {
     var rootTag;
     beforeEach(function () {
