@@ -13,15 +13,24 @@ var getFirstTransformation = function (collection, transformer) {
     return t;
 };
 
-var bfs = function (validator, node, results) {
+var linearSearchExtraction = function (sieve, node, results) {
+    recursiveSearch(linearSearchExtraction, sieve, node.parent, results);
+};
+
+var breadthFirstSearchExtraction = function (sieve, node, results) {
+    _.each(node.children, function (child) {
+        recursiveSearch(breadthFirstSearchExtraction, sieve, child, results);
+    });
+};
+var recursiveSearch = function (searchStrategy, sieve, node, results) {
     results = results || [];
-    var bfsWithValidator = _.partial(bfs, validator);
-    if (validator(node)) {
+    if (!node) {
+        return;
+    }
+    if (sieve(node)) {
         results.push(node);
     } else {
-        _.map(node.children, function (child) {
-            bfsWithValidator(child, results);
-        })
+        searchStrategy(sieve, node, results);
     }
     return results;
 };
@@ -40,6 +49,9 @@ class Tag {
     }
 
     addChild(tag) {
+        if (tag.parent) {
+            throw Error("Can not re add a node");
+        }
         tag.parent = this;
         this.children.push(tag);
     }
@@ -49,11 +61,15 @@ class Tag {
     }
 
     findByAttribute(name, value) {
-        return bfs(_.partial(tagHasAttribute, {name, value}), this)
+        return recursiveSearch(breadthFirstSearchExtraction, _.partial(tagHasAttribute, {name, value}), this)
     }
 
     findByAttributes(attributes) {
-        return bfs(_.partial(tagHasAllAttributes, attributes), this)
+        return recursiveSearch(breadthFirstSearchExtraction, _.partial(tagHasAllAttributes, attributes), this)
+    }
+
+    findParent(attributes) {
+        return recursiveSearch(linearSearchExtraction, _.partial(tagHasAllAttributes, attributes), this)
     }
 }
 
