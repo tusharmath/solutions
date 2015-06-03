@@ -22,9 +22,13 @@ describe('Tag', function () {
             rootTag.children[0].should.equal(tag);
             tag.parent.should.equal(rootTag);
         });
-
     });
-
+    describe("removeAttribute()", function () {
+        var tag = new Tag();
+        tag.addAttribute('a', 1);
+        tag.removeAttribute('a');
+        tag.attributes.length.should.equal(0);
+    });
     describe("findByAttributes()", function () {
         it("find tags matching attribute", function () {
             var tag1 = new Tag(), tag2 = new Tag(), tag3 = new Tag();
@@ -78,6 +82,15 @@ describe('Tag', function () {
             tag3.addAttribute('a22', 'v22');
 
             tag3.findParent([{name: 'a2', value: 'v2'}]).should.deep.equal([tag2]);
+        });
+
+        it("memoizes the elements", function () {
+            var tag1 = new Tag();
+            rootTag.addChild(tag1);
+            tag1.addAttribute('a1', 'v1');
+            rootTag.findByAttributes([{name: 'a1', value: 'v1'}]).should.deep.equal([tag1]);
+            tag1.removeAttribute('a1');
+            rootTag.findByAttributes([{name: 'a1', value: 'v1'}]).should.deep.equal([tag1]);
         });
     });
 });

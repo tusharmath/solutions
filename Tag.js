@@ -41,6 +41,7 @@ class Tag {
         this.findByAttributes = _.partial(this._createSearchStrategy, invokeOnChildren);
         this.findParent = _.partial(this._createSearchStrategy, invokeOnParent);
     }
+
     addChild(tag) {
         if (tag.parent) {
             throw Error("Can not re add a node");
@@ -48,11 +49,18 @@ class Tag {
         tag.parent = this;
         this.children.push(tag);
     }
-    _createSearchStrategy(searchStrategy, attributes) {
-        return recursiveSearch(searchStrategy, _.partial(tagHasAllAttributes, attributes), [], this);
+
+    _createSearchStrategy(invokeOn, attributes) {
+        return recursiveSearch(invokeOn, _.partial(tagHasAllAttributes, attributes), [], this);
     }
+
     addAttribute(name, value) {
         this.attributes.push(createTagAttribute(name, value));
+    }
+    removeAttribute(name){
+        _.remove(this.attributes, function (attr) {
+            return attr.name === name;
+        });
     }
 }
 module.exports = Tag;
