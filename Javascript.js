@@ -13,14 +13,12 @@ var getFirstTransformation = function (collection, transformer) {
     return t;
 };
 
-var linearSearchExtraction = function (sieve, node, results) {
-    recursiveSearch(linearSearchExtraction, sieve, node.parent, results);
+var nextNodeLinearSearch = function (cb, node) {
+    cb(node.parent);
 };
 
-var breadthFirstSearchExtraction = function (sieve, node, results) {
-    _.each(node.children, function (child) {
-        recursiveSearch(breadthFirstSearchExtraction, sieve, child, results);
-    });
+var nextNodeBFS = function (cb, node) {
+    _.each(node.children, cb);
 };
 var recursiveSearch = function (searchStrategy, sieve, node, results) {
     results = results || [];
@@ -30,10 +28,12 @@ var recursiveSearch = function (searchStrategy, sieve, node, results) {
     if (sieve(node)) {
         results.push(node);
     } else {
-        searchStrategy(sieve, node, results);
+        searchStrategy(_.partial(recursiveSearchWithNodeAtLast, searchStrategy, sieve, results), node);
     }
     return results;
 };
+
+var recursiveSearchWithNodeAtLast = _.rearg(recursiveSearch, 0, 1, 3, 2);
 
 var tagHasAttribute = function (searchAttribute, tag) {
     return _.any(tag.attributes, _.partial(_.isEqual, searchAttribute));
@@ -61,15 +61,15 @@ class Tag {
     }
 
     findByAttribute(name, value) {
-        return recursiveSearch(breadthFirstSearchExtraction, _.partial(tagHasAttribute, {name, value}), this)
+        return recursiveSearch(nextNodeBFS, _.partial(tagHasAttribute, {name, value}), this)
     }
 
     findByAttributes(attributes) {
-        return recursiveSearch(breadthFirstSearchExtraction, _.partial(tagHasAllAttributes, attributes), this)
+        return recursiveSearch(nextNodeBFS, _.partial(tagHasAllAttributes, attributes), this)
     }
 
     findParent(attributes) {
-        return recursiveSearch(linearSearchExtraction, _.partial(tagHasAllAttributes, attributes), this)
+        return recursiveSearch(nextNodeLinearSearch, _.partial(tagHasAllAttributes, attributes), this)
     }
 }
 
