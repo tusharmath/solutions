@@ -25,7 +25,7 @@ describe('Tag', function () {
 
     });
 
-    describe("findByAttribute()", function () {
+    describe("findByAttributes()", function () {
         it("find tags matching attribute", function () {
             var tag1 = new Tag(), tag2 = new Tag(), tag3 = new Tag();
             tag1.addChild(tag2);
@@ -36,12 +36,11 @@ describe('Tag', function () {
             tag2.addAttribute('a2', 'v2');
             tag3.addAttribute('a3', 'v3');
 
-            rootTag.findByAttribute('a1', 'v1').should.deep.equal([tag1]);
-            rootTag.findByAttribute('a2', 'v2').should.deep.equal([tag2]);
-            rootTag.findByAttribute('a3', 'v3').should.deep.equal([tag3]);
+            rootTag.findByAttributes([{name: 'a1', value: 'v1'}]).should.deep.equal([tag1]);
+            rootTag.findByAttributes([{name: 'a2', value: 'v2'}]).should.deep.equal([tag2]);
+            rootTag.findByAttributes([{name: 'a3', value: 'v3'}]).should.deep.equal([tag3]);
         });
-    });
-    describe("findByAttributes()", function () {
+
         it("find a tag by attribute(s)", function () {
             var tag1 = new Tag(), tag2 = new Tag(), tag3 = new Tag();
             tag1.addChild(tag2);
