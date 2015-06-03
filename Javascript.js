@@ -13,27 +13,24 @@ var getFirstTransformation = function (collection, transformer) {
     return t;
 };
 
-var nextNodeLinearSearch = function (cb, node) {
+var invokeOnParent = function (cb, node) {
     cb(node.parent);
 };
 
-var nextNodeBFS = function (cb, node) {
+var invokeOnChildren = function (cb, node) {
     _.each(node.children, cb);
 };
-var recursiveSearch = function (searchStrategy, sieve, node, results) {
-    results = results || [];
+var recursiveSearch = function (searchStrategy, sieve, results, node) {
     if (!node) {
         return;
     }
     if (sieve(node)) {
         results.push(node);
     } else {
-        searchStrategy(_.partial(recursiveSearchWithNodeAtLast, searchStrategy, sieve, results), node);
+        searchStrategy(_.partial(recursiveSearch, searchStrategy, sieve, results), node);
     }
     return results;
 };
-
-var recursiveSearchWithNodeAtLast = _.rearg(recursiveSearch, 0, 1, 3, 2);
 
 var tagHasAttribute = function (searchAttribute, tag) {
     return _.any(tag.attributes, _.partial(_.isEqual, searchAttribute));
@@ -42,10 +39,16 @@ var tagHasAllAttributes = function (searchAttributes, tag) {
     return _.all(searchAttributes, _.partial(_.rearg(tagHasAttribute, 1, 0), tag));
 };
 
+var extracted = function (attributes, searchStrategy) {
+    return recursiveSearch(searchStrategy, _.partial(tagHasAllAttributes, attributes), [], this);
+};
 class Tag {
     constructor() {
         this.children = [];
         this.attributes = [];
+
+        this.findByAttributes = _.partial(this._createSearchStrategy, invokeOnChildren);
+        this.findParent = _.partial(this._createSearchStrategy, invokeOnParent);
     }
 
     addChild(tag) {
@@ -56,20 +59,16 @@ class Tag {
         this.children.push(tag);
     }
 
+    _createSearchStrategy(searchStrategy, attributes) {
+        return recursiveSearch(searchStrategy, _.partial(tagHasAllAttributes, attributes), [], this);
+    }
+
     addAttribute(name, value) {
         this.attributes.push(createTagAttribute(name, value));
     }
 
     findByAttribute(name, value) {
-        return recursiveSearch(nextNodeBFS, _.partial(tagHasAttribute, {name, value}), this)
-    }
-
-    findByAttributes(attributes) {
-        return recursiveSearch(nextNodeBFS, _.partial(tagHasAllAttributes, attributes), this)
-    }
-
-    findParent(attributes) {
-        return recursiveSearch(nextNodeLinearSearch, _.partial(tagHasAllAttributes, attributes), this)
+        return recursiveSearch(invokeOnChildren, _.partial(tagHasAttribute, {name, value}), [], this)
     }
 }
 
