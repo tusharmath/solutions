@@ -1,0 +1,62 @@
+/**
+ * Created by tusharmathur on 6/3/15.
+ */
+"use strict";
+var chai = require('chai');
+var should = chai.should();
+
+var Tag = require('../Javascript');
+describe('Tag', function () {
+    var rootTag;
+    beforeEach(function () {
+        rootTag = new Tag();
+    });
+    it("exists", function () {
+        rootTag.should.be.an.instanceof(Tag);
+    });
+
+    describe("addTag()", function () {
+        it("adds a tag to the root node", function () {
+            var tag = new Tag();
+            rootTag.addChild(tag);
+            rootTag.children[0].should.equal(tag);
+            tag.parent.should.equal(rootTag);
+        });
+
+    });
+
+    describe("findByAttribute()", function () {
+        it("find tags matching attribute", function () {
+            var tag1 = new Tag(), tag2 = new Tag(), tag3 = new Tag();
+            tag1.addChild(tag2);
+            rootTag.addChild(tag1);
+            rootTag.addChild(tag3);
+
+            tag1.addAttribute('a1', 'v1');
+            tag2.addAttribute('a2', 'v2');
+            tag3.addAttribute('a3', 'v3');
+
+            rootTag.findByAttribute('a1', 'v1').should.equal(tag1);
+            rootTag.findByAttribute('a2', 'v2').should.equal(tag2);
+            rootTag.findByAttribute('a3', 'v3').should.equal(tag3);
+        });
+    });
+    describe("findByAttributes()", function () {
+        it("find a tag by attribute(s)", function () {
+            var tag1 = new Tag(), tag2 = new Tag(), tag3 = new Tag();
+            tag1.addChild(tag2);
+            rootTag.addChild(tag1);
+            rootTag.addChild(tag3);
+
+            tag1.addAttribute('a1', 'v1');
+            tag2.addAttribute('a2', 'v2');
+            tag2.addAttribute('a22', 'v22');
+            tag3.addAttribute('a3', 'v3');
+
+            rootTag.findByAttributes([{name: 'a1', value: 'v1'}]).should.equal(tag1);
+            rootTag.findByAttributes([{name: 'a2', value: 'v2'}, {name: 'a22', value: 'v22'}]).should.equal(tag2);
+            should.not.exist(rootTag.findByAttributes([{name: 'a2', value: 'v2'}, {name: 'a23', value: 'v23'}]));
+            rootTag.findByAttributes([{name: 'a3', value: 'v3'}]).should.equal(tag3);
+        });
+    });
+});
