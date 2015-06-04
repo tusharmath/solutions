@@ -111,11 +111,11 @@ describe('Tag', function () {
                 output.push(str);
             };
             var expectedOutput = [
-                "├── [Attribute(a, 1)]",
-                "│   ├── [Attribute(b, 2)]",
-                "│   │   ├── [Attribute(c, 3)]",
-                "│   │   └── [Attribute(d, 4)]",
-                "│   └── [Attribute(e, 5)]"
+                "└── [Attribute(a, 1)]",
+                "    ├── [Attribute(b, 2)]",
+                "    │   ├── [Attribute(c, 3)]",
+                "    │   └── [Attribute(d, 4)]",
+                "    └── [Attribute(e, 5)]"
             ];
             var a = create('a', 1);
             var b = create('b', 2);
@@ -127,7 +127,7 @@ describe('Tag', function () {
             b.addChild(c);
             b.addChild(d);
             a.addChild(e);
-            a.print(logger)
+            a.print(logger);
             output.should.deep.equal(expectedOutput);
         });
 

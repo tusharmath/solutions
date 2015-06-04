@@ -1,21 +1,38 @@
 "use strict";
 var _ = require('lodash');
 var TagAttribute = require('./TagAttribute');
-var invokeOnParent = function (action, node) {
-    action(node.parent);
+
+var getParentAsIterable = function * (node) {
+    yield node.parent;
 };
-var invokeOnChildren = function (action, node) {
-    _.each(node.children, action);
+
+var getChildrenAsIterable = function * (node) {
+    yield * node.children;
 };
-var recursiveFilter = function (invokeOn, sieve, results, node) {
-    var partialRecursion = _.partial(recursiveFilter, invokeOn, sieve, results);
+
+var eachOf = function (iterator, action) {
+    for (var val of iterator) {
+        action(val);
+    }
+};
+
+/**
+ * Invokes {generator} on all the nodes that qualify the {sieve} and returns {results}
+ * @param {function} generator
+ * @param {function} sieve
+ * @param {Object[]} results
+ * @param {Tag} node
+ * @returns {Object[]}
+ */
+var recursiveFilter = function (generator, sieve, results, node) {
+    var partialRecursiveFilter = _.partial(recursiveFilter, generator, sieve, results);
     if (!node) {
         return [];
     }
     if (sieve(node)) {
         results.push(node);
     } else {
-        invokeOn(partialRecursion, node);
+        eachOf(generator(node), partialRecursiveFilter);
     }
     return results;
 };
@@ -31,6 +48,7 @@ var matchKeyValueForObject = function (key, value, obj) {
 var arraySerialize = function (list) {
     return _.invoke(list, 'toString').join(', ');
 };
+
 /**
  * Node of a tag tree
  * @class
@@ -62,14 +80,14 @@ class Tag {
          * @param {TagAttribute[]} search attributes
          * @returns {Tag[]}
          */
-        this.findByAttributes = _.partial(this._createSearchStrategy, invokeOnChildren);
+        this.findByAttributes = _.partial(this._createSearchStrategy, getChildrenAsIterable);
 
         /**
          * Search tags linearly by attributes, through its parent nodes
          * @param {TagAttribute[]} searchAttributes
          * @returns {Tag[]}
          */
-        this.findParent = _.partial(this._createSearchStrategy, invokeOnParent);
+        this.findParent = _.partial(this._createSearchStrategy, getParentAsIterable);
 
         /**
          * Search tags recursively through the child nodes, return and caches the response
@@ -119,19 +137,22 @@ class Tag {
     }
 
     /**
-     * Prints the tree from the current node
+     * Prints the tree from the current node (DFS:Pre order)
      * @param {function} logger
      * @param {string} prefix
      * @param {boolean} isTail
      */
     print(logger, prefix, isTail) {
         prefix = prefix || '';
+        isTail = _.isUndefined(isTail) ? true : isTail;
         logger(prefix + (isTail ? "└── " : "├── ") + arraySerialize(this.attributes));
-        for (var i = 0; i < this.children.length - 1; i++) {
-            this.children[i].print(logger, prefix + (isTail ? "    " : "│   "), false);
-        }
-        if (this.children.length > 0) {
-            this.children[this.children.length - 1].print(logger, prefix + (isTail ? "    " : "│   "), true);
+
+        var childPrefix = prefix + (isTail ? "    " : "│   ");
+        var children = this.children;
+
+        _.invoke(_.initial(children), 'print', logger, childPrefix, false);
+        if (!_.isEmpty(children)) {
+            _.last(children).print(logger, childPrefix, true);
         }
     }
 }
