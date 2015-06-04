@@ -127,7 +127,7 @@ describe('Tag', function () {
             b.addChild(c);
             b.addChild(d);
             a.addChild(e);
-            a.print(logger).should.deep.equal(expectedOutput);
+            a.toArray().should.deep.equal(expectedOutput);
         });
 
     });

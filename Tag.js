@@ -25,16 +25,31 @@ var eachOf = function (iterator, action) {
  * @returns {Object[]}
  */
 var recursiveFilter = function (generator, sieve, results, node) {
-    var partialRecursiveFilter = _.partial(recursiveFilter, generator, sieve, results);
-    if (!node) {
-        return [];
-    }
     if (sieve(node)) {
         results.push(node);
     } else {
-        eachOf(generator(node), partialRecursiveFilter);
+        eachOf(generator(node), _.partial(recursiveFilter, generator, sieve, results));
     }
     return results;
+};
+var createNodeName = function (prefix, isTail, node) {
+    return prefix + (isTail ? "└── " : "├── ") + arraySerialize(node.attributes);
+};
+var createNodePrefixName = function (prefix, isTail) {
+    return prefix + (isTail ? "    " : "│   ");
+};
+
+var tempSieve = function (){
+    
+};
+var extractedToArray = function (prefix, results, isTail, node) {
+    results.push(createNodeName(prefix, isTail, node));
+    var childPrefix = createNodePrefixName(prefix, isTail);
+    var children = node.children,
+        lastChild = _.last(children);
+    _.each(children, function (child) {
+        extractedToArray(childPrefix, results, child === lastChild, child);
+    });
 };
 
 var tagHasAttribute = function (searchAttribute, tag) {
@@ -138,27 +153,13 @@ class Tag {
     }
 
     /**
-     * Prints the tree from the current node (DFS:Pre order)
-     * @param {function} logger
+     * Converts the tree from the current node to an iterable array (DFS:Pre order)
      */
-    print(logger) {
-        var extracted = function (prefix, isTail, results, node) {
-            isTail = _.isUndefined(isTail) ? true : isTail;
-            results.push(prefix + (isTail ? "└── " : "├── ") + arraySerialize(node.attributes));
-            var childPrefix = prefix + (isTail ? "    " : "│   ");
-            var children = node.children;
-            _.each(_.initial(children), _.partial(extracted, childPrefix, false, results));
-            if (!_.isEmpty(children)) {
-                extracted(childPrefix, true, results, _.last(children));
-            }
-        };
+    toArray() {
+
         var results = [];
-        extracted('', true, results, this);
+        extractedToArray('', results, true, this);
         return results;
     }
 }
 module.exports = Tag;
-var results = [];
-var logger = function (content) {
-    results.push(content);
-};
