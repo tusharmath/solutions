@@ -24,18 +24,19 @@ var eachOf = function (iterator, action) {
  * @param {Tag} node
  * @returns {Object[]}
  */
-var recursiveFilterAndMap = function (generator, sieve, results, mapper, node) {
-    var partialRecursiveFilter = _.partial(recursiveFilterAndMap, generator, sieve, results, mapper);
+var recursiveFilter = function (generator, sieve, results, node) {
+    var partialRecursiveFilter = _.partial(recursiveFilter, generator, sieve, results);
     if (!node) {
         return [];
     }
     if (sieve(node)) {
-        results.push(mapper(node));
+        results.push(node);
     } else {
         eachOf(generator(node), partialRecursiveFilter);
     }
     return results;
 };
+
 var tagHasAttribute = function (searchAttribute, tag) {
     return _.any(tag.attributes, searchAttribute.equals);
 };
@@ -116,7 +117,7 @@ class Tag {
      * @private
      */
     _createSearchStrategy(invokeOn, attributes) {
-        return recursiveFilterAndMap(invokeOn, _.partial(tagHasAllAttributes, attributes), [], _.identity, this);
+        return recursiveFilter(invokeOn, _.partial(tagHasAllAttributes, attributes), [], this);
     }
 
     /**
