@@ -5,9 +5,9 @@
 /**
  * Attribute class
  * @class
- * @type {Attribute}
+ * @type {TagAttribute}
  */
-module.exports = class Attribute {
+module.exports = class TagAttribute {
     /**
      * Constructor
      * @param {string} name
@@ -21,10 +21,18 @@ module.exports = class Attribute {
 
     /**
      * Check for equality of {attribute}
-     * @param {Attribute} attribute
+     * @param {TagAttribute} attribute
      * @returns {boolean}
      */
     equals(attribute) {
         return attribute.name === this.name && attribute.value === this.value;
+    }
+
+    /**
+     * Converts the attribute to string
+     * @returns {string}
+     */
+    toString() {
+        return '[Attribute(' + [this.name, this.value].join(', ') + ')]'
     }
 };

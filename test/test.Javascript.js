@@ -6,7 +6,7 @@ var chai = require('chai'), _ = require('lodash');
 var should = chai.should();
 
 var Tag = require('../Tag'),
-    Attribute = require('../Attribute');
+    Attribute = require('../TagAttribute');
 
 var attr = function (name, value) {
     return new Attribute(name, value);

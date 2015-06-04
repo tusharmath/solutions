@@ -1,6 +1,6 @@
 "use strict";
 var _ = require('lodash');
-var Attribute = require('./Attribute');
+var TagAttribute = require('./TagAttribute');
 var invokeOnParent = function (action, node) {
     action(node.parent);
 };
@@ -48,28 +48,29 @@ class Tag {
         this.children = [];
 
         /**
-         * Attribute Collection
-         * @type {Attribute[]}
+         * TagAttribute Collection
+         * @type {Array.<TagAttribute>}
+         * @public
          */
         this.attributes = [];
 
         /**
          * Search tags recursively by attributes, through the child nodes
-         * @param {Attribute[]} search attributes
+         * @param {TagAttribute[]} search attributes
          * @returns {Tag[]}
          */
         this.findByAttributes = _.partial(this._createSearchStrategy, invokeOnChildren);
 
         /**
          * Search tags linearly by attributes, through its parent nodes
-         * @param {Attribute[]} search attributes
+         * @param {TagAttribute[]} searchAttributes
          * @returns {Tag[]}
          */
         this.findParent = _.partial(this._createSearchStrategy, invokeOnParent);
 
         /**
          * Search tags recursively through the child nodes, return and caches the response
-         * @param {Attribute[]} search attributes
+         * @param {TagAttribute[]} searchAttributes
          * @returns {Tag[]}
          */
         this.findByAttributesMemoized = _.memoize(this.findByAttributes, _.identity);
@@ -90,7 +91,7 @@ class Tag {
     /**
      * Create a search strategy
      * @param {Function} invokeOn
-     * @param {Attribute[]} attributes
+     * @param {TagAttribute[]} attributes
      * @private
      */
     _createSearchStrategy(invokeOn, attributes) {
@@ -103,7 +104,7 @@ class Tag {
      * @param {Object} value
      */
     addAttribute(name, value) {
-        this.attributes.push(new Attribute(name, value));
+        this.attributes.push(new TagAttribute(name, value));
     }
 
     /**
@@ -112,6 +113,21 @@ class Tag {
      */
     removeAttribute(name) {
         _.remove(this.attributes, _.partial(matchKeyValueForObject, 'name', name));
+    }
+
+    /**
+     * Prints the tree from the current node
+     * @param {string} prefix
+     * @param {boolean} isTrail
+     */
+    print(prefix, isTail) {
+        console.log(prefix + (isTail ? "└── " : "├── ") + _.map(this.attributes, function (c){return c.toString()}).join(', '));
+        for (var i = 0; i < this.children.length - 1; i++) {
+            this.children[i].print(prefix + (isTail ? "    " : "│   "), false);
+        }
+        if (this.children.length > 0) {
+            this.children[this.children.length - 1].print(prefix + (isTail ? "    " : "│   "), true);
+        }
     }
 }
 module.exports = Tag;
