@@ -140,21 +140,21 @@ class Tag {
     /**
      * Prints the tree from the current node (DFS:Pre order)
      * @param {function} logger
-     * @param {string} prefix
-     * @param {boolean} isTail
      */
-    print(logger, prefix, isTail) {
-        var extracted = function (prefix, isTail, node) {
+    print(logger) {
+        var extracted = function (prefix, isTail, results, node) {
             isTail = _.isUndefined(isTail) ? true : isTail;
-            logger(prefix + (isTail ? "└── " : "├── ") + arraySerialize(node.attributes));
+            results.push(prefix + (isTail ? "└── " : "├── ") + arraySerialize(node.attributes));
             var childPrefix = prefix + (isTail ? "    " : "│   ");
             var children = node.children;
-            _.each(_.initial(children), _.partial(extracted, childPrefix, false));
+            _.each(_.initial(children), _.partial(extracted, childPrefix, false, results));
             if (!_.isEmpty(children)) {
-                extracted(childPrefix, true, _.last(children));
+                extracted(childPrefix, true, results, _.last(children));
             }
         };
-        extracted('', true, this);
+        var results = [];
+        extracted('', true, results, this);
+        return results;
     }
 }
 module.exports = Tag;
