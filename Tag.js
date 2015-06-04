@@ -144,17 +144,21 @@ class Tag {
      * @param {boolean} isTail
      */
     print(logger, prefix, isTail) {
-        prefix = prefix || '';
-        isTail = _.isUndefined(isTail) ? true : isTail;
-        logger(prefix + (isTail ? "└── " : "├── ") + arraySerialize(this.attributes));
-
-        var childPrefix = prefix + (isTail ? "    " : "│   ");
-        var children = this.children;
-
-        _.invoke(_.initial(children), 'print', logger, childPrefix, false);
-        if (!_.isEmpty(children)) {
-            _.last(children).print(logger, childPrefix, true);
-        }
+        var extracted = function (prefix, isTail, node) {
+            isTail = _.isUndefined(isTail) ? true : isTail;
+            logger(prefix + (isTail ? "└── " : "├── ") + arraySerialize(node.attributes));
+            var childPrefix = prefix + (isTail ? "    " : "│   ");
+            var children = node.children;
+            _.each(_.initial(children), _.partial(extracted, childPrefix, false));
+            if (!_.isEmpty(children)) {
+                extracted(childPrefix, true, _.last(children));
+            }
+        };
+        extracted('', true, this);
     }
 }
 module.exports = Tag;
+var results = [];
+var logger = function (content) {
+    results.push(content);
+};
