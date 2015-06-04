@@ -28,6 +28,9 @@ var tagHasAllAttributes = function (searchAttributes, tag) {
 var matchKeyValueForObject = function (key, value, obj) {
     return obj[key] === value;
 };
+var arraySerialize = function (list) {
+    return _.invoke(list, 'toString').join(', ');
+};
 /**
  * Node of a tag tree
  * @class
@@ -117,16 +120,18 @@ class Tag {
 
     /**
      * Prints the tree from the current node
+     * @param {function} logger
      * @param {string} prefix
-     * @param {boolean} isTrail
+     * @param {boolean} isTail
      */
-    print(prefix, isTail) {
-        console.log(prefix + (isTail ? "└── " : "├── ") + _.map(this.attributes, function (c){return c.toString()}).join(', '));
+    print(logger, prefix, isTail) {
+        prefix = prefix || '';
+        logger(prefix + (isTail ? "└── " : "├── ") + arraySerialize(this.attributes));
         for (var i = 0; i < this.children.length - 1; i++) {
-            this.children[i].print(prefix + (isTail ? "    " : "│   "), false);
+            this.children[i].print(logger, prefix + (isTail ? "    " : "│   "), false);
         }
         if (this.children.length > 0) {
-            this.children[this.children.length - 1].print(prefix + (isTail ? "    " : "│   "), true);
+            this.children[this.children.length - 1].print(logger, prefix + (isTail ? "    " : "│   "), true);
         }
     }
 }

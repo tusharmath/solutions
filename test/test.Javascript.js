@@ -98,4 +98,38 @@ describe('Tag', function () {
             rootTag.findByAttributesMemoized([attr('a1', 'v1')]).should.deep.equal([tag1]);
         });
     });
+
+    describe("print()", function () {
+        var create = function (name, value) {
+            var t = new Tag();
+            t.addAttribute(name, value);
+            return t;
+        };
+        it("it prints the out put", function () {
+            var output = [];
+            var logger = function (str) {
+                output.push(str);
+            };
+            var expectedOutput = [
+                "├── [Attribute(a, 1)]",
+                "│   ├── [Attribute(b, 2)]",
+                "│   │   ├── [Attribute(c, 3)]",
+                "│   │   └── [Attribute(d, 4)]",
+                "│   └── [Attribute(e, 5)]"
+            ];
+            var a = create('a', 1);
+            var b = create('b', 2);
+            var c = create('c', 3);
+            var d = create('d', 4);
+            var e = create('e', 5);
+
+            a.addChild(b);
+            b.addChild(c);
+            b.addChild(d);
+            a.addChild(e);
+            a.print(logger)
+            output.should.deep.equal(expectedOutput);
+        });
+
+    });
 });
