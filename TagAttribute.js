@@ -3,7 +3,7 @@
  */
 "use strict";
 /**
- * Attribute class
+ * HTML Tag attribute representation
  * @class
  * @type {TagAttribute}
  */
