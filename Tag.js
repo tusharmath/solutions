@@ -32,23 +32,21 @@ var recursiveFilter = function (generator, sieve, results, node) {
     }
     return results;
 };
-var createNodeName = function (node, options) {
-    return options.prefix + (options.isTail ? "└── " : "├── ") + arraySerialize(node.attributes);
-};
-var createNodePrefixName = function (prefix, isTail) {
-    return prefix + (isTail ? "    " : "│   ");
+var createNodeName = function (node, params) {
+    return params.prefix + (params.isTail ? "└── " : "├── ") + arraySerialize(node.attributes);
 };
 
-var createChildOptions = function (options, node, child) {
+var createChildOptions = function (params, node, child) {
     return {
-        prefix: createNodePrefixName(options.prefix, options.isTail),
-        isTail: child === _.last(node.children)
+        prefix: params.prefix + (params.isTail ? "    " : "│   "),
+        isTail: child === _.last(node.children),
+        name: createNodeName(child, params)
     };
 };
-var extractedToArray = function (results, node, options, parent) {
-    results.push(createNodeName(node, options));
+var extractedToArray = function (results, node, params) {
+    results.push(createNodeName(node, params));
     _.each(node.children, function (child) {
-        extractedToArray(results, child, createChildOptions(options, node, child));
+        extractedToArray(results, child, createChildOptions(params, node, child));
     });
 };
 
