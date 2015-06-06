@@ -75,7 +75,7 @@ var printMapper = function (child, params, parent) {
 };
 /**
  * Checks if {searchAttribute} is present on a tag
- * @param {Attribute} searchAttribute
+ * @param {TagAttribute} searchAttribute
  * @param {Tag} tag
  * @returns {boolean}
  */
@@ -84,7 +84,7 @@ var tagHasAttribute = function (searchAttribute, tag) {
 };
 /**
  * Checks is all the attributes are present on a tag
- * @param {Attribute} searchAttributes
+ * @param {TagAttribute} searchAttributes
  * @param {Tag} tag
  * @returns {boolean}
  */
@@ -105,7 +105,7 @@ var hasValue = function (key, value, obj) {
 
 /**
  * Serializes an array of attributes
- * @param {Attribute[]} list
+ * @param {TagAttribute[]} list
  * @returns {string}
  */
 var arraySerialize = function (list) {
