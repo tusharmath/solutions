@@ -25,33 +25,33 @@ var eachOf = function (iterator, action) {
  * @returns {Object[]}
  */
 var recursiveFilter = function (generator, sieve, results, node) {
-    if (sieve(node)) {
-        results.push(node);
-    } else {
-        eachOf(generator(node), _.partial(recursiveFilter, generator, sieve, results));
-    }
-    return results;
+    return _.filter(recursiveIterator(generator, function (a, b, c) {
+        return c;
+    }, [], node, node), sieve);
 };
 var createNodeName = function (params) {
     return params.prefix + (params.isTail ? "└── " : "├── ") + arraySerialize(params.node.attributes);
 };
 
-var createChildOptions = function (params, node, child) {
+var printIterator = function (params, parent, child) {
     return {
         prefix: params.prefix + (params.isTail ? "    " : "│   "),
-        isTail: child === _.last(node.children),
+        isTail: child === _.last(parent.children),
         node: child
     };
 };
-var extractedToArray = function (results, node, params) {
+var recursiveIterator = function (generator, iterator, results, parent, params) {
     results.push(params);
-    _.each(node.children, function (child) {
-        extractedToArray(results, child, createChildOptions(params, node, child));
-    });
+    if (parent) {
+        eachOf(generator(parent), function (child) {
+            recursiveIterator(generator, iterator, results, child, iterator(params, parent, child));
+        });
+    }
+    return results;
 };
 
 var tagHasAttribute = function (searchAttribute, tag) {
-    return _.any(tag.attributes, searchAttribute.equals);
+    return tag && _.any(tag.attributes, searchAttribute.equals);
 };
 var tagHasAllAttributes = function (searchAttributes, tag) {
     return _.all(searchAttributes, _.partial(_.rearg(tagHasAttribute, 1, 0), tag));
@@ -153,13 +153,12 @@ class Tag {
     /**
      * Converts the tree from the current node to an iterable array (DFS:Pre order)
      */
-    toArray() {
-
-        var results = [];
-        extractedToArray(results, this, {isTail: true, prefix: '', node: this});
-        return _.map(results, function (r){
-            return createNodeName(r);
-        });
+    toString() {
+        return _.map(recursiveIterator(getChildrenAsIterable, printIterator, [], this, {
+            isTail: true,
+            prefix: '',
+            node: this
+        }), createNodeName).join('\n');
     }
 }
 module.exports = Tag;

@@ -116,7 +116,7 @@ describe('Tag', function () {
                 "    │   ├── [Attribute(c, 3)]",
                 "    │   └── [Attribute(d, 4)]",
                 "    └── [Attribute(e, 5)]"
-            ];
+            ].join('\n');
             var a = create('a', 1);
             var b = create('b', 2);
             var c = create('c', 3);
@@ -127,7 +127,7 @@ describe('Tag', function () {
             b.addChild(c);
             b.addChild(d);
             a.addChild(e);
-            a.toArray().should.deep.equal(expectedOutput);
+            a.toString().should.deep.equal(expectedOutput);
         });
 
     });
