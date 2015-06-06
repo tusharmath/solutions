@@ -32,23 +32,23 @@ var recursiveFilter = function (generator, sieve, results, node) {
     }
     return results;
 };
-var createNodeName = function (prefix, isTail, node) {
-    return prefix + (isTail ? "└── " : "├── ") + arraySerialize(node.attributes);
+var createNodeName = function (node, options) {
+    return options.prefix + (options.isTail ? "└── " : "├── ") + arraySerialize(node.attributes);
 };
 var createNodePrefixName = function (prefix, isTail) {
     return prefix + (isTail ? "    " : "│   ");
 };
 
-var tempSieve = function (){
-    
+var createChildOptions = function (options, node, child) {
+    return {
+        prefix: createNodePrefixName(options.prefix, options.isTail),
+        isTail: child === _.last(node.children)
+    };
 };
-var extractedToArray = function (prefix, results, isTail, node) {
-    results.push(createNodeName(prefix, isTail, node));
-    var childPrefix = createNodePrefixName(prefix, isTail);
-    var children = node.children,
-        lastChild = _.last(children);
-    _.each(children, function (child) {
-        extractedToArray(childPrefix, results, child === lastChild, child);
+var extractedToArray = function (results, node, options, parent) {
+    results.push(createNodeName(node, options));
+    _.each(node.children, function (child) {
+        extractedToArray(results, child, createChildOptions(options, node, child));
     });
 };
 
@@ -158,7 +158,7 @@ class Tag {
     toArray() {
 
         var results = [];
-        extractedToArray('', results, true, this);
+        extractedToArray(results, this, {isTail: true, prefix: ''});
         return results;
     }
 }
