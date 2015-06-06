@@ -16,35 +16,22 @@ var eachOf = function (iterator, action) {
     }
 };
 
-/**
- * Invokes {generator} on all the nodes that qualify the {sieve} and returns {results}
- * @param {function} generator
- * @param {function} sieve
- * @param {Object[]} results
- * @param {Tag} node
- * @returns {Object[]}
- */
-var recursiveFilter = function (generator, sieve, results, node) {
-    return _.filter(recursiveIterator(generator, function (a, b, c) {
-        return c;
-    }, [], node, node), sieve);
-};
 var createNodeName = function (params) {
     return params.prefix + (params.isTail ? "└── " : "├── ") + arraySerialize(params.node.attributes);
 };
 
-var printIterator = function (params, parent, child) {
+var printIterator = function (child, params, parent) {
     return {
         prefix: params.prefix + (params.isTail ? "    " : "│   "),
         isTail: child === _.last(parent.children),
         node: child
     };
 };
-var recursiveIterator = function (generator, iterator, results, parent, params) {
+var recursiveIterator = function (generator, iterator, results, node, params) {
     results.push(params);
-    if (parent) {
-        eachOf(generator(parent), function (child) {
-            recursiveIterator(generator, iterator, results, child, iterator(params, parent, child));
+    if (node) {
+        eachOf(generator(node), function (child) {
+            recursiveIterator(generator, iterator, results, child, iterator(child, params, node));
         });
     }
     return results;
@@ -125,12 +112,13 @@ class Tag {
 
     /**
      * Create a search strategy
-     * @param {Function} invokeOn
+     * @param {Function} generator
      * @param {TagAttribute[]} attributes
      * @private
      */
-    _createSearchStrategy(invokeOn, attributes) {
-        return recursiveFilter(invokeOn, _.partial(tagHasAllAttributes, attributes), [], this);
+    _createSearchStrategy(generator, attributes) {
+        var attributeSieve = _.partial(tagHasAllAttributes, attributes);
+        return _.filter(recursiveIterator(generator, _.identity, [], this, this), attributeSieve);
     }
 
     /**
