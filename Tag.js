@@ -32,19 +32,19 @@ var recursiveFilter = function (generator, sieve, results, node) {
     }
     return results;
 };
-var createNodeName = function (node, params) {
-    return params.prefix + (params.isTail ? "└── " : "├── ") + arraySerialize(node.attributes);
+var createNodeName = function (params) {
+    return params.prefix + (params.isTail ? "└── " : "├── ") + arraySerialize(params.node.attributes);
 };
 
 var createChildOptions = function (params, node, child) {
     return {
         prefix: params.prefix + (params.isTail ? "    " : "│   "),
         isTail: child === _.last(node.children),
-        name: createNodeName(child, params)
+        node: child
     };
 };
 var extractedToArray = function (results, node, params) {
-    results.push(createNodeName(node, params));
+    results.push(params);
     _.each(node.children, function (child) {
         extractedToArray(results, child, createChildOptions(params, node, child));
     });
@@ -156,8 +156,10 @@ class Tag {
     toArray() {
 
         var results = [];
-        extractedToArray(results, this, {isTail: true, prefix: ''});
-        return results;
+        extractedToArray(results, this, {isTail: true, prefix: '', node: this});
+        return _.map(results, function (r){
+            return createNodeName(r);
+        });
     }
 }
 module.exports = Tag;
