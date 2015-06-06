@@ -91,14 +91,11 @@ class Tag {
     }
 
     /**
-     * Converts the tree from the current node to an iterable array (DFS:Pre order)
+     * Converts the tree from the current node to a string that can be printed
      */
     toString() {
-        return _.map(u.treeToArray(u.getChildrenAsIterable, u.printMapper, this, {
-            isTail: true,
-            prefix: '',
-            node: this
-        }), u.createNodePrintString).join('\n');
+        var initParams = {isTail: true, prefix: '', node: this};
+        return _.map(u.treeToArray(u.getChildrenAsIterable, u.printMapper, this, initParams), u.createNodePrintString).join('\n');
     }
 }
 module.exports = Tag;
