@@ -3,11 +3,15 @@ var _ = require('lodash');
 var TagAttribute = require('./TagAttribute');
 
 var getParentAsIterable = function * (node) {
-    yield node.parent;
+    if (node) {
+        yield node.parent;
+    }
 };
 
 var getChildrenAsIterable = function * (node) {
-    yield * node.children;
+    if (node) {
+        yield * node.children;
+    }
 };
 
 var eachOf = function (iterator, action) {
@@ -27,13 +31,12 @@ var printIterator = function (child, params, parent) {
         node: child
     };
 };
-var recursiveIterator = function (generator, iterator, results, node, params) {
+var recursiveIterator = function (generator, iterator, node, params) {
+    var results = [];
     results.push(params);
-    if (node) {
-        eachOf(generator(node), function (child) {
-            recursiveIterator(generator, iterator, results, child, iterator(child, params, node));
-        });
-    }
+    eachOf(generator(node), function (child) {
+        results = results.concat(recursiveIterator(generator, iterator, child, iterator(child, params, node)));
+    });
     return results;
 };
 
@@ -61,7 +64,7 @@ class Tag {
          * Link to parent tag
          * @type {Tag}
          */
-        this.parent = null;
+        this.parent = _.noop();
 
         /**
          * Collection of children tags
@@ -118,7 +121,7 @@ class Tag {
      */
     _createSearchStrategy(generator, attributes) {
         var attributeSieve = _.partial(tagHasAllAttributes, attributes);
-        return _.filter(recursiveIterator(generator, _.identity, [], this, this), attributeSieve);
+        return _.filter(recursiveIterator(generator, _.identity, this, this), attributeSieve);
     }
 
     /**
@@ -142,7 +145,7 @@ class Tag {
      * Converts the tree from the current node to an iterable array (DFS:Pre order)
      */
     toString() {
-        return _.map(recursiveIterator(getChildrenAsIterable, printIterator, [], this, {
+        return _.map(recursiveIterator(getChildrenAsIterable, printIterator, this, {
             isTail: true,
             prefix: '',
             node: this
