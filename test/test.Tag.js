@@ -11,15 +11,20 @@ var Tag = require('../Tag'),
 var attr = function (name, value) {
     return new Attribute(name, value);
 };
+var create = function (name, value) {
+    var t = new Tag();
+    t.addAttribute(name, value);
+    return t;
+};
 describe('Tag', function () {
     var rootTag;
     beforeEach(function () {
         rootTag = new Tag();
     });
+
     it("exists", function () {
         rootTag.should.be.an.instanceof(Tag);
     });
-
     describe("addTag()", function () {
         it("adds a tag to the root node", function () {
             var tag = new Tag();
@@ -34,6 +39,7 @@ describe('Tag', function () {
         tag.removeAttribute('a');
         tag.attributes.length.should.equal(0);
     });
+
     describe("findByAttributes()", function () {
 
         it("find tags matching attribute", function () {
@@ -98,13 +104,7 @@ describe('Tag', function () {
             rootTag.findByAttributesMemoized([attr('a1', 'v1')]).should.deep.equal([tag1]);
         });
     });
-
     describe("print()", function () {
-        var create = function (name, value) {
-            var t = new Tag();
-            t.addAttribute(name, value);
-            return t;
-        };
         it("it prints the out put", function () {
             var output = [];
             var logger = function (str) {
@@ -128,6 +128,25 @@ describe('Tag', function () {
             b.addChild(d);
             a.addChild(e);
             a.toString().should.deep.equal(expectedOutput);
+        });
+
+    });
+
+    describe("find()", function () {
+        it("find the element going from right to left", function () {
+
+            var a = create('a', 1);
+            var b = create('b', 2);
+            var c = create('c', 3);
+            var d = create('x', 4);
+            var e = create('x', 4);
+
+            a.addChild(b);
+            b.addChild(c);
+            b.addChild(d);
+            a.addChild(e);
+            a.find([attr('b', 2)]).should.deep.equal([b]);
+            a.find([attr('x', 4)], [attr('b', 2)]).should.deep.equal([d]);
         });
 
     });
