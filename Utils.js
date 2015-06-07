@@ -53,6 +53,19 @@ u.eachOf = function (iterator, action) {
 };
 
 /**
+ * Maps an iterable
+ * @param {Symbol.iterator} iterator
+ * @param {function} action
+ */
+u.mapOf = function (iterator, action) {
+    var results= [], index = 0;
+    u.eachOf(iterator, function (item) {
+        results.push(action(item, index++));
+    });
+    return results;
+};
+
+/**
  * Creates string to print the node
  * @param {Object} params
  * @returns {string}
