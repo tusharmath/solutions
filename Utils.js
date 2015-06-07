@@ -21,21 +21,18 @@ u.treeToArray = function (generator, arrayMapper, node, parentParams) {
 };
 /**
  * Generator to get the parent node
- * @param {Tag} node
+ * @param {{parent: Object}} node
  */
 u.getParentAsIterable = function * (node) {
-    if (node) {
-        yield node.parent;
+    while (node.parent) {
+        node = node.parent;
+        yield node;
     }
-};
-
-u.getListAsIterable = function * (list) {
-    yield * list;
 };
 
 /**
  * Generator to get the child nodes
- * @param {Tag} node
+ * @param {{children: Array}} node
  * @yield {Tag}
  */
 u.getChildrenAsIterable = function * (node) {
