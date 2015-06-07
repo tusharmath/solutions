@@ -41,6 +41,18 @@ u.getChildrenAsIterable = function * (node) {
     }
 };
 
+u.getChildrenAsIterableWithDepth = function * (node) {
+    var queue = [{node: node, depth: 0}], unshift = Array.prototype.unshift;
+    var item = queue.shift();
+    while (item) {
+        yield  item;
+        unshift.apply(queue, _.map(item.node.children, function (c) {
+            return {node: c, depth: item.depth + 1};
+        }));
+        item = queue.shift();
+    }
+};
+
 u.getListAsIterable = function * (list) {
     yield * list;
 };
