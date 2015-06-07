@@ -100,17 +100,18 @@ class Tag {
         return _.map(u.treeToArray(u.getChildrenAsIterable, u.printMapper, this), u.createNodePrintString).join('\n');
     }
 
-    find() {
-        var attributeSelector = _.toArray(arguments);
+    /**
+     * Find an element using tree search
+     * @param {...TagAttribute[]} attributeSelector
+     */
+    find(attributeSelector) {
+        attributeSelector = _.toArray(arguments);
         var tags = this.findByAttributes(_.first(attributeSelector));
         var restSelectors = _.rest(attributeSelector);
-
+        var customTagHasAllAttributes = _.rearg(u.tagHasAllAttributes, 1, 0);
         return _.filter(tags, function (tag) {
             var parentIterator = u.getListAsIterable(u.mapOf(u.getParentAsIterable(tag), _.identity));
-            var tempF = function (iterator, sieve, attributes) {
-                return u.anyOf(iterator, _.partial(sieve, attributes));
-            };
-            return _.all(restSelectors, _.partial(tempF, parentIterator, u.tagHasAllAttributes));
+            return _.all(restSelectors, _.partial(u.anyOf, parentIterator, customTagHasAllAttributes));
         });
     }
 }

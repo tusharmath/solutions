@@ -69,20 +69,20 @@ u.mapOf = function (iterator, action) {
     return results;
 };
 
-
 /**
  * Filters an iterable
  * @param {Symbol.iterator} iterator
  * @param {function} sieve
+ * @param {Array} params
  */
-u.anyOf = function (iterator, sieve) {
+u.anyOf = _.restParam(function (iterator, sieve, params) {
     for (var val of iterator) {
-        if(sieve(val)){
+        if (sieve.apply(null, [val].concat(params))) {
             return true;
         }
     }
     return false;
-};
+});
 
 /**
  * Creates string to print the node
