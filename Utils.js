@@ -66,21 +66,23 @@ u.createNodePrintString = function (params) {
 
 /**
  * Mapper function for iterating over the tree
- * @param {Tag} child
+ * @param {Tag} node
  * @param {object} params
- * @param {Tag} parent
  * @returns {{prefix: string, isTail: boolean, node: Tag}}
  */
-u.printMapper = function (child, params) {
-    var parent = child.parent;
+u.printMapper = function (node, params) {
+    var parent = node.parent, prefix, isTail;
     if (!parent) {
-        return {isTail: true, prefix: '', node: child};
+        isTail = true;
+    } else {
+        isTail = node === _.last(parent.children)
     }
-    return {
-        prefix: params.prefix + (params.isTail ? "    " : "│   "),
-        isTail: child === _.last(parent.children),
-        node: child
-    };
+    if (!params) {
+        prefix = '';
+    } else {
+        prefix = params.prefix + (params.isTail ? "    " : "│   ")
+    }
+    return {prefix, isTail, node};
 };
 /**
  * Checks if {searchAttribute} is present on a tag
