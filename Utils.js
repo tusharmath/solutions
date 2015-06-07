@@ -164,4 +164,13 @@ u.arraySerialize = function (list) {
     return _.invoke(list, 'toString').join(', ');
 };
 
+u.findTagInTree = function (startNode, attributeSelector){
+    var restSelectors = _.rest(attributeSelector);
+    var customTagHasAllAttributes = _.rearg(u.tagHasAllAttributes, 1, 0);
+    return _.filter(startNode.findByAttributes(_.first(attributeSelector)), function (tag) {
+        var parentIterator = u.getListAsIterable(u.mapOf(u.getParentAsIterable(tag), _.identity));
+        return _.all(restSelectors, _.partial(u.anyOf, parentIterator, customTagHasAllAttributes));
+    });
+};
+
 module.exports = u;
