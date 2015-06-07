@@ -41,6 +41,10 @@ u.getChildrenAsIterable = function * (node) {
     }
 };
 
+u.getListAsIterable = function * (list) {
+    yield * list;
+};
+
 /**
  * Calls an action over each iteration
  * @param {Symbol.iterator} iterator
@@ -58,11 +62,26 @@ u.eachOf = function (iterator, action) {
  * @param {function} action
  */
 u.mapOf = function (iterator, action) {
-    var results= [], index = 0;
+    var results = [], index = 0;
     u.eachOf(iterator, function (item) {
         results.push(action(item, index++));
     });
     return results;
+};
+
+
+/**
+ * Filters an iterable
+ * @param {Symbol.iterator} iterator
+ * @param {function} sieve
+ */
+u.anyOf = function (iterator, sieve) {
+    for (var val of iterator) {
+        if(sieve(val)){
+            return true;
+        }
+    }
+    return false;
 };
 
 /**

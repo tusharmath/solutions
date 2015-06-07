@@ -104,18 +104,13 @@ class Tag {
         var attributeSelector = _.toArray(arguments);
         var tags = this.findByAttributes(_.first(attributeSelector));
         var restSelectors = _.rest(attributeSelector);
+
         return _.filter(tags, function (tag) {
-            var parentList = u.mapOf(u.getParentAsIterable(tag), _.identity),
-                index = 0, matchCount = 0;
-            return _.all(restSelectors, function (attributes) {
-                while(index < parentList.length){
-                    var currentNode = parentList[index++];
-                    if(u.tagHasAllAttributes(attributes, currentNode)){
-                        return true;
-                    }
-                }
-                return false;
-            });
+            var parentIterator = u.getListAsIterable(u.mapOf(u.getParentAsIterable(tag), _.identity));
+            var tempF = function (iterator, sieve, attributes) {
+                return u.anyOf(iterator, _.partial(sieve, attributes));
+            };
+            return _.all(restSelectors, _.partial(tempF, parentIterator, u.tagHasAllAttributes));
         });
     }
 }

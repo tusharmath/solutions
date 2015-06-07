@@ -135,18 +135,27 @@ describe('Tag', function () {
     describe("find()", function () {
         it("find the element going from right to left", function () {
 
-            var a = create('a', 1);
-            var b = create('b', 2);
-            var c = create('c', 3);
-            var d = create('x', 4);
-            var e = create('x', 4);
+            var a = create('a', 1),
+                b = create('b', 2),
+                c = create('c', 3),
+                d = create('x', 4),
+                e = create('x', 4);
 
-            a.addChild(b);
-            b.addChild(c);
-            b.addChild(d);
-            a.addChild(e);
+            a.addChild(b),
+                b.addChild(c),
+                b.addChild(d),
+                a.addChild(e);
+            /**
+             *      a(a,1)
+             *          b(b,2)
+             *              c(c,3)
+             *              d(x,4)
+             *          e(x,4)
+             */
             a.find([attr('b', 2)]).should.deep.equal([b]);
             a.find([attr('x', 4)], [attr('b', 2)]).should.deep.equal([d]);
+            a.find([attr('x', 4)], [attr('a', 1)]).should.deep.equal([d, e]);
+            a.find([attr('c', 3)], [attr('b', 2)]).should.deep.equal([c]);
         });
 
     });
