@@ -32,6 +32,7 @@ class Tag {
         /**
          * Search tags recursively by attributes, through the child nodes
          * @param {TagAttribute[]} search attributes
+         * @type {function}
          * @returns {Tag[]}
          */
         this.findByAttributes = _.partial(this._createSearchStrategy, u.getChildrenAsIterable);
@@ -39,6 +40,7 @@ class Tag {
         /**
          * Search tags linearly by attributes, through its parent nodes
          * @param {TagAttribute[]} searchAttributes
+         * @type {function}
          * @returns {Tag[]}
          */
         this.findParent = _.partial(this._createSearchStrategy, u.getParentAsIterable);
@@ -46,6 +48,7 @@ class Tag {
         /**
          * Search tags recursively through the child nodes, return and caches the response
          * @param {TagAttribute[]} searchAttributes
+         * @type {function}
          * @returns {Tag[]}
          */
         this.findByAttributesMemoized = _.memoize(this.findByAttributes, _.identity);
@@ -70,7 +73,7 @@ class Tag {
      * @private
      */
     _createSearchStrategy(generator, attributes) {
-        return _.filter(u.treeToArray(generator, _.identity, this, this), _.partial(u.tagHasAllAttributes, attributes));
+        return _.filter(u.treeToArray(generator, _.identity, this), _.partial(u.tagHasAllAttributes, attributes));
     }
 
     /**
@@ -94,8 +97,8 @@ class Tag {
      * Converts the tree from the current node to a string that can be printed
      */
     toString() {
-        var initParams = {isTail: true, prefix: '', node: this};
-        return _.map(u.treeToArray(u.getChildrenAsIterable, u.printMapper, this, initParams), u.createNodePrintString).join('\n');
+        return _.map(u.treeToArray(u.getChildrenAsIterable, u.printMapper, this), u.createNodePrintString).join('\n');
+    }
     }
 }
 module.exports = Tag;

@@ -1,6 +1,7 @@
 /**
  * Created by tusharmathur on 6/6/15.
  */
+"use strict";
 var u = {}, _ = require('lodash');
 /**
  * Traverses the tree using a generator to get to the next node
@@ -10,11 +11,11 @@ var u = {}, _ = require('lodash');
  * @param {object} params
  * @returns {Array}
  */
-u.treeToArray = function (generator, arrayMapper, node, params) {
-    var results = [];
+u.treeToArray = function (generator, arrayMapper, node, parentParams) {
+    var results = [], params = arrayMapper(node, parentParams);
     results.push(params);
     u.eachOf(generator(node), function (child) {
-        results = results.concat(u.treeToArray(generator, arrayMapper, child, arrayMapper(child, params, node)));
+        results = results.concat(u.treeToArray(generator, arrayMapper, child, params));
     });
     return results;
 };
@@ -26,6 +27,10 @@ u.getParentAsIterable = function * (node) {
     if (node) {
         yield node.parent;
     }
+};
+
+u.getListAsIterable = function * (list) {
+    yield * list;
 };
 
 /**
@@ -66,7 +71,11 @@ u.createNodePrintString = function (params) {
  * @param {Tag} parent
  * @returns {{prefix: string, isTail: boolean, node: Tag}}
  */
-u.printMapper = function (child, params, parent) {
+u.printMapper = function (child, params) {
+    var parent = child.parent;
+    if (!parent) {
+        return {isTail: true, prefix: '', node: child};
+    }
     return {
         prefix: params.prefix + (params.isTail ? "    " : "│   "),
         isTail: child === _.last(parent.children),
