@@ -106,10 +106,9 @@ class Tag {
      */
     find(attributeSelector) {
         attributeSelector = _.toArray(arguments);
-        var tags = this.findByAttributes(_.first(attributeSelector));
         var restSelectors = _.rest(attributeSelector);
         var customTagHasAllAttributes = _.rearg(u.tagHasAllAttributes, 1, 0);
-        return _.filter(tags, function (tag) {
+        return _.filter(this.findByAttributes(_.first(attributeSelector)), function (tag) {
             var parentIterator = u.getListAsIterable(u.mapOf(u.getParentAsIterable(tag), _.identity));
             return _.all(restSelectors, _.partial(u.anyOf, parentIterator, customTagHasAllAttributes));
         });
