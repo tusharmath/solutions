@@ -1,0 +1,74 @@
+<html>
+<head>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body, html {
+            font-size: 14px;
+            margin: 0;
+            padding: 0;
+        }
+
+        input {
+            font-size: 14px;
+            padding: 10px;
+            width: 100%;
+            margin: 4px 0;
+            text-transform: uppercase;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        #emoticon {
+            font-size: 4em;
+            width: 100%;
+            display: inline-block;
+        }
+        .text-center{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div>
+        <input type="text" id="emoticon-code" placeholder="Character Code (HEX)"/>
+    </div>
+    <div>
+        <input type="text" id="emoticon-bg-color" placeholder="Background Color (HEX)"/>
+    </div>
+    <div class="text-center">
+        <span id="emoticon"></span>
+    </div>
+    <script>
+        (function (document) {
+            var get = document.getElementById.bind(document);
+            var emoticonCode = get('emoticon-code');
+            var emoticonBgColor = get('emoticon-bg-color');
+            var emoticon = get('emoticon');
+            var render = function () {
+                var bgColor = encodeURIComponent(emoticonBgColor.value);
+                var code = encodeURIComponent(emoticonCode.value);
+
+                if (code) {
+                    emoticon.innerHTML = "&#x" + code;
+                }
+                if(bgColor){
+                    emoticon.style.backgroundColor = "#" + bgColor;
+                }
+            };
+            emoticonCode.addEventListener('keyup', render);
+            emoticonBgColor.addEventListener('keyup', render);
+            render();
+        })(document);
+    </script>
+</div>
+</body>
+</html>
+
