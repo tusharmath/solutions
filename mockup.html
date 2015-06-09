@@ -4,163 +4,173 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css"/>
     <link rel="stylesheet" href="mockup.css"/>
-    <script src="http://code.jquery.com/jquery-2.1.4.js"></script>
+    <script src="node_modules/jquery/dist/jquery.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="http://underscorejs.org/underscore.js"></script>
+    <script src="node_modules/underscore/underscore.js"></script>
     <script src="mockup.js"></script>
     <title></title>
 </head>
 <body>
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                    data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">
-                <span class="glyphicon glyphicon-record" aria-hidden="true"></span>
-            </a>
-        </div>
+<div id="theme-block">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">
+                    <span class="glyphicon glyphicon-record" aria-hidden="true"></span>
+                </a>
+            </div>
 
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li>
-                    <a href="#">
-                        <span class="glyphicon glyphicon-book" aria-hidden="true"></span>
-                        <span>Sources</span>
-                    </a>
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                        <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
-                        <span>Domains</span>
-                        <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">Separated link</a></li>
-                        <li class="divider"></li>
-                        <li><a href="#">One more separated link</a></li>
-                    </ul>
-                </li>
-            </ul>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="#">
+                            <span class="glyphicon glyphicon-book" aria-hidden="true"></span>
+                            <span>Sources</span>
+                        </a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
+                            <span>Domains</span>
+                            <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">Action</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">Separated link</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">One more separated link</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-<nav class="navbar">
-    <div class="container-fluid">
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li class="active">
-                    <a href="#">
-                        <div><span class="lead">Domain</span></div>
-                        <div><span class="text-muted">Sales</span><span class="caret"></span></div>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <div><span class="lead">Schema</span></div>
-                        <div><span class="text-muted">Sales NA</span><span class="caret"></span></div>
-                    </a>
-                </li>
-            </ul>
-            <form class="navbar-form navbar-right" role="search">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Search for..."/>
+    <nav class="navbar">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a href="#">
+                            <div><span class="lead">Domain</span></div>
+                            <div><span class="text-muted">Sales</span><span class="caret"></span></div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <div><span class="lead">Schema</span></div>
+                            <div><span class="text-muted">Sales NA</span><span class="caret"></span></div>
+                        </a>
+                    </li>
+                </ul>
+                <form class="navbar-form navbar-right" role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search for..."/>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </nav>
+
+    <div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-1">
+                    <div class="btn-group-vertical pull-right" role="group" aria-label="...">
+                        <button type="button" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-signal" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
+                        </button>
+                        <button type="button" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-inbox" aria-hidden="true"></span>
+                        </button>
+                    </div>
                 </div>
-            </form>
-        </div>
+                <div class="col-sm-11">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div>
+                                <small class="text-muted">Table</small>
+                            </div>
+                            <div>
+                                <div class="pull-left">
 
-    </div>
-</nav>
+                                    <div class="dropdown">
+                                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
+                                                data-toggle="dropdown" aria-expanded="true">
+                                            <span>Bill of Materials</span>
+                                            <span class="caret"></span>
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a>
+                                            </li>
+                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another
+                                                action</a>
+                                            </li>
+                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something
+                                                else
+                                                here</a></li>
+                                            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated
+                                                link</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <span>&nbsp;</span>
+                                <button class="btn btn-default">Data</button>
+                                <button class="btn btn-default">Details</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <p>
 
-<div>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-1">
-                <div class="btn-group-vertical pull-right" role="group" aria-label="...">
-                    <button type="button" class="btn btn-primary">
-                        <span class="glyphicon glyphicon-signal" aria-hidden="true"></span>
-                    </button>
-                    <button type="button" class="btn btn-primary">
-                        <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
-                    </button>
-                    <button type="button" class="btn btn-primary">
-                        <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
-                    </button>
-                    <button type="button" class="btn btn-primary">
-                        <span class="glyphicon glyphicon-inbox" aria-hidden="true"></span>
-                    </button>
+                        <div class="col-sm-12">
+                            <table class="table">
+                                <thead>
+                                <th>
+                                    <span>Column Name&nbsp;</span>
+                                    <span class="caret"></span>
+                                </th>
+                                <th>Column Type</th>
+                                <th>Value Type</th>
+                                </thead>
+                                <tbody id="row">
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                        </p>
+                    </div>
                 </div>
             </div>
-            <div class="col-sm-11">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div>
-                            <small class="text-muted">Table</small>
-                        </div>
-                        <div>
-                            <div class="pull-left">
-
-                                <div class="dropdown">
-                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
-                                            data-toggle="dropdown" aria-expanded="true">
-                                        <span>Bill of Materials</span>
-                                        <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a>
-                                        </li>
-                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another
-                                            action</a>
-                                        </li>
-                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else
-                                            here</a></li>
-                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated
-                                            link</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <span>&nbsp;</span>
-                            <button class="btn btn-default">Data</button>
-                            <button class="btn btn-default">Details</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <p>
-
-                    <div class="col-sm-12">
-                        <table class="table">
-                            <thead>
-                            <th>
-                                <span>Column Name&nbsp;</span>
-                                <span class="caret"></span>
-                            </th>
-                            <th>Column Type</th>
-                            <th>Value Type</th>
-                            </thead>
-                            <tbody id="row">
-
-                            </tbody>
-                        </table>
-
-                    </div>
-                    </p>
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <ul class="theme-toggle list-inline">
+                        <li><a href="#" data-theme="alpha">Theme Alpha</a></li>
+                        <li><a href="#" data-theme="beta">Theme Beta</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <script type="text/html" id="template">
     <% _.each(obj.rows, function (row){ %>
     <tr>

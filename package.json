@@ -2,7 +2,9 @@
   "dependencies": {
     "bootstrap": "^3.3.4",
     "chai": "^3.0.0",
+    "jquery": "^2.1.4",
     "lodash": "^3.9.3",
-    "mocha": "^2.2.5"
+    "mocha": "^2.2.5",
+    "underscore": "^1.8.3"
   }
 }
