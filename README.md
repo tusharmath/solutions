@@ -1,6 +1,9 @@
-##Housing.com
-WAP to mimic DOM tree and the operations on it, without using an actual DOM.
+##TOPIC
 
+##Setup Instructions
+
+
+##Features
 0. Multi paradigm approach: Functional + Object Oriented
 
 0. Documentation done via [JS Docs](http://usejsdoc.org/)
