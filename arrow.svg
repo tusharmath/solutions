@@ -1,0 +1,7 @@
+<svg id="svg-defs">
+    <defs>
+        <clipPath id="clip-triangle">
+            <polygon points="0,0 150,0 300,150 150,300 0,300 0,0"/>
+        </clipPath>
+    </defs>
+</svg>

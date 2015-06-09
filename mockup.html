@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css"/>
     <link rel="stylesheet" href="mockup.css"/>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="http://underscorejs.org/underscore-min.js"></script>
     <title></title>
 </head>
 <body>
@@ -17,14 +20,22 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Brand</a>
+            <a class="navbar-brand" href="#">
+                <span class="glyphicon glyphicon-record" aria-hidden="true"></span>
+            </a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li><a href="#">Sources</a></li>
+                <li>
+                    <a href="#">
+                        <span class="glyphicon glyphicon-book" aria-hidden="true"></span>
+                        <span>Sources</span>
+                    </a>
+                </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        <span class="glyphicon glyphicon-globe" aria-hidden="true"></span>
                         <span>Domains</span>
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
@@ -75,13 +86,16 @@
             <div class="col-sm-1">
                 <div class="btn-group-vertical pull-right" role="group" aria-label="...">
                     <button type="button" class="btn btn-primary">
-                        <span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-signal" aria-hidden="true"></span>
                     </button>
                     <button type="button" class="btn btn-primary">
-                        <span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
                     </button>
                     <button type="button" class="btn btn-primary">
-                        <span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-picture" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-inbox" aria-hidden="true"></span>
                     </button>
                 </div>
             </div>
