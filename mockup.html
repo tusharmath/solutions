@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css"/>
     <link rel="stylesheet" href="mockup.css"/>
-    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="http://code.jquery.com/jquery-2.1.4.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="http://underscorejs.org/underscore-min.js"></script>
+    <script src="http://underscorejs.org/underscore.js"></script>
+    <script src="mockup.js"></script>
     <title></title>
 </head>
 <body>
@@ -146,9 +147,12 @@
                             </th>
                             <th>Column Type</th>
                             <th>Value Type</th>
-                            <th>Histogram</th>
                             </thead>
+                            <tbody id="row">
+
+                            </tbody>
                         </table>
+
                     </div>
                     </p>
                 </div>
@@ -156,5 +160,15 @@
         </div>
     </div>
 </div>
+
+<script type="text/html" id="template">
+    <% _.each(obj.rows, function (row){ %>
+    <tr>
+        <td><%= row.columnName %></td>
+        <td><%= row.columnType %></td>
+        <td><%= row.columnValueType %></td>
+    </tr>
+    <%})%>
+</script>
 </body>
 </html>
