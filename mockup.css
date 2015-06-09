@@ -1,9 +1,8 @@
-.arrow-right {
-    width: 0;
-    height: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-left: 10px solid #eeF;
-    float: right;
+.beta .navbar-default {
+    background-color: rgb(51, 122, 183);
 
+}
+
+.beta .navbar-default .navbar-nav > li > a{
+    color: #fff;
 }

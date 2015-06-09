@@ -9,7 +9,7 @@ $(function () {
 
     var template = _.template($('#template').html())({rows: data});
     $('#row').html(template);
-    var themeBlock = $('#theme-block');
+    var themeBlock = $('body');
     $('.theme-toggle li a').click(function (el) {
         themeBlock.attr('class', '');
         themeBlock.addClass($(el.target).data().theme)
