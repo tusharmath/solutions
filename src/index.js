@@ -1,10 +1,12 @@
-(function () {
+(function (canvas, score) {
     "use strict";
     var CELL_WIDTH = 20,
         LINE_WIDTH = 1,
         GAME_SPEED = 100,
         BLOCK_COLOR = '#F00',
         GRID_SIZE = 20,
+        MAX_CELL = (GRID_SIZE - 2),
+        context = canvas.getContext("2d"),
         getScore = function (len) {
             return (len - 1) * 100;
         },
@@ -21,7 +23,7 @@
             return ['L', 'R', 'U', 'D'][_.random(0, 3)];
         },
         randomCell = function () {
-            return [_.random(0, GRID_SIZE - 2), _.random(0, GRID_SIZE - 2)];
+            return [_.random(0, MAX_CELL), _.random(0, MAX_CELL)];
         },
         cellEqual = function (a, b) {
             return a[0] === b[0] && a[1] == b[1];
@@ -45,29 +47,27 @@
             return currentStep;
         },
         getStep = function (key) {
-            return toXY({
+            return ({
                 L: [-1, 0],
                 R: [1, 0],
                 U: [0, -1],
                 D: [0, 1]
             }[key]);
         },
-        normalizeNode = function (CELL_COUNT, node) {
-            var MAX_X = CELL_COUNT - 1,
-                MAX_Y = CELL_COUNT - 2;
-            if (node[1] >= MAX_X) {
+        normalizeStep = function (CELL_COUNT, node) {
+            if (node[1] > MAX_CELL) {
                 node[1] = 0;
             }
             if (node[1] < 0) {
-                node[1] = MAX_Y;
+                node[1] = MAX_CELL;
             }
 
-            if (node[0] >= MAX_X) {
+            if (node[0] > MAX_CELL) {
                 node[0] = 0;
             }
 
             if (node[0] < 0) {
-                node[0] = MAX_Y;
+                node[0] = MAX_CELL;
             }
             return node;
         },
@@ -109,71 +109,72 @@
                 }
             }
 
-        };
+        },
+        gameEnded = function (_collisionMatrix, node) {
+            return _collisionMatrix.get(node) === 1;
+        },
+        _drawBlock = _.partial(drawBlock, context),
+        _drawGrid = _.partial(drawGrid, context),
+        _setScore = _.partial(setText, score),
+        _colorSnake = _.partial(_drawBlock, '#F00'),
+        _colorApple = _.partial(_drawBlock, '#00F'),
+        _colorEmptiness = _.partial(_drawBlock, '#FFF'),
+        _moveThrottle = _.partialRight(setInterval, GAME_SPEED);
 
-    (function (canvas, score) {
-        var context = canvas.getContext("2d"),
-            _drawBlock = _.partial(drawBlock, context),
-            _drawGrid = _.partial(drawGrid, context),
-            _setScore = _.partial(setText, score);
-        var viewPort = CELL_WIDTH * GRID_SIZE;
-        canvas.height = canvas.width = viewPort + CELL_WIDTH * 2;
+    canvas.height = canvas.width = CELL_WIDTH * GRID_SIZE + CELL_WIDTH * 2;
 
-        function Game() {
-            this.direction = 'D';
-            this.snake = [[0, 0]];
-            this.apple = [0, 5];
-            this.grid = createSquareMap(GRID_SIZE, 0);
-            this._directionQueue = [];
-            this.colorRed = _.partial(_drawBlock, '#F00');
-            this.colorBlue = _.partial(_drawBlock, '#00F');
-            this.colorWhite = _.partial(_drawBlock, '#FFF');
+    function Game() {
+        var _stopThrottle,
+            _previousDirection = randomDirection(),
+            snake = [randomCell()],
+            apple = randomCell(),
+            _nextDirection = null,
+            _collisionMatrix = createSquareMap(GRID_SIZE, 0),
+            _gameEnded = _.partial(gameEnded, _collisionMatrix)
+            ;
 
-            //Start
-            _drawGrid();
-            this.grid.set(this.snake[0], 1);
-            this.colorRed(this.snake[0]);
-            this.colorBlue(this.apple);
-        }
+        //Start
 
-        Game.prototype.move = function () {
-
-            this.direction = normalizeDirection(this.direction, this._directionQueue.pop());
-            var last = _.last(this.snake),
-                step = getStep(this.direction),
-                node = normalizeNode(GRID_SIZE, [last[0] + step.x, last[1] + step.y]),
-                tail = this.snake.shift();
-            if (this.grid.get(node) === 1) {
-                clearInterval(timer);
-                return _setScore('GAME OVER: ' + getScore(this.snake.length));
-            }
-
-            this.snake.push(node);
-            this.colorRed(node);
-            this.grid.set(node, 1);
-            this.grid.set(tail, 0);
-
-            //Screen Color;
-            if (cellEqual(this.apple, tail)) {
-                this.snake.unshift(tail);
-                this.apple = randomCell();
-                this.colorBlue(this.apple);
+        _collisionMatrix.set(snake[0], 1);
+        _colorSnake(snake[0]);
+        _colorApple(apple);
+        this.move = function () {
+            _previousDirection = normalizeDirection(_previousDirection, _nextDirection);
+            var last = _.last(snake),
+                step = getStep(_previousDirection),
+                step = normalizeStep(GRID_SIZE, [last[0] + step[0], last[1] + step[1]]),
+                tail = snake.shift();
+            if (_gameEnded(step)) {
+                _stopThrottle();
+                _setScore('GAME OVER: ' + getScore(snake.length));
             } else {
-                this.colorWhite(tail);
-            }
-            _setScore(getScore(this.snake.length));
-        };
+                snake.push(step);
+                _colorSnake(step);
+                _collisionMatrix.set(step, 1);
+                _collisionMatrix.set(tail, 0);
 
-        Game.prototype.pushDirection = function (direction) {
+                _colorEmptiness(tail);
+                if (cellEqual(apple, tail)) {
+                    snake.unshift(tail);
+                    apple = randomCell();
+                    _colorApple(apple);
+                }
+                _setScore(getScore(snake.length));
+            }
+
+        }.bind(this);
+
+        this.setDirection = function (direction) {
             if (direction) {
-                this._directionQueue.push(direction);
+                _nextDirection = direction;
             }
-        };
+        }.bind(this);
 
-        var g = new Game();
+        _stopThrottle = _.partial(clearInterval, _moveThrottle(this.move));
+    }
 
-        var timer = setInterval(g.move.bind(g), GAME_SPEED);
-        document.addEventListener('keydown', _.partial(_.flowRight(g.pushDirection.bind(g), keyCodeToDirection, _.partialRight(_.get, 'keyCode'))));
-    })(document.getElementById('game'), document.getElementById('score'));
+    var g = new Game();
+    _drawGrid();
+    document.addEventListener('keydown', _.partial(_.flowRight(g.setDirection, keyCodeToDirection, _.partialRight(_.get, 'keyCode'))));
 
-})();
+})(document.getElementById('game'), document.getElementById('score'));
