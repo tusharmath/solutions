@@ -117,6 +117,7 @@
         _drawGrid = _.partial(drawGrid, context),
         _setScore = _.partial(setText, score),
         _colorSnake = _.partial(_drawBlock, '#F00'),
+        _colorWormhole = _.partial(_drawBlock, '#000'),
         _colorApple = _.partial(_drawBlock, '#00F'),
         _colorEmptiness = _.partial(_drawBlock, '#FFF'),
         _moveThrottle = _.partialRight(setInterval, GAME_SPEED);
@@ -128,16 +129,20 @@
             _previousDirection = randomDirection(),
             snake = [randomCell()],
             apple = randomCell(),
+            wormhole = [randomCell(), randomCell()],
             _nextDirection = null,
-            _collisionMatrix = createSquareMap(GRID_SIZE, 0),
-            _gameEnded = _.partial(gameEnded, _collisionMatrix)
+            _snakeBodyMatrix = createSquareMap(GRID_SIZE, 0),
+            _gameEnded = _.partial(gameEnded, _snakeBodyMatrix)
             ;
 
         //Start
 
-        _collisionMatrix.set(snake[0], 1);
+        _snakeBodyMatrix.set(snake[0], 'S');
+
         _colorSnake(snake[0]);
         _colorApple(apple);
+        _colorWormhole(wormhole[0]);
+        _colorWormhole(wormhole[1]);
         this.move = function () {
             _previousDirection = normalizeDirection(_previousDirection, _nextDirection);
             var last = _.last(snake),
@@ -150,15 +155,34 @@
             } else {
                 snake.push(step);
                 _colorSnake(step);
-                _collisionMatrix.set(step, 1);
-                _collisionMatrix.set(tail, 0);
+                _snakeBodyMatrix.set(step, 1);
+                _snakeBodyMatrix.set(tail, 0);
 
                 _colorEmptiness(tail);
+                //onApple(snake, apple, tail);
+
                 if (cellEqual(apple, tail)) {
                     snake.unshift(tail);
                     apple = randomCell();
                     _colorApple(apple);
+                } else if (cellEqual(step, wormhole[0])) {
+                    snake.push(wormhole[1]);
+                    var removed = snake.shift();
+                    _snakeBodyMatrix.set(removed, 0);
+                    wormhole = [randomCell(), randomCell()];
+                    _colorWormhole(wormhole[0]);
+                    _colorWormhole(wormhole[1]);
+                    _colorEmptiness(removed);
+                } else if (cellEqual(step, wormhole[1])) {
+                    snake.push(wormhole[0]);
+                    var removed = snake.shift();
+                    _snakeBodyMatrix.set(removed, 0);
+                    wormhole = [randomCell(), randomCell()];
+                    _colorWormhole(wormhole[0]);
+                    _colorWormhole(wormhole[1]);
+                    _colorEmptiness(removed);
                 }
+
                 _setScore(getScore(snake.length));
             }
 
