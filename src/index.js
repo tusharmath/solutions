@@ -2,6 +2,7 @@
     "use strict";
     var CELL_WIDTH = 20,
         LINE_WIDTH = 1,
+        GAME_SPEED = 100,
         BLOCK_COLOR = '#F00',
         CELL_COUNT = 20,
         toXY = function (pos) {
@@ -22,7 +23,13 @@
         cellEqual = function (a, b) {
             return a[0] === b[0] && a[1] == b[1];
         },
+        keyCodeToDirection = function (val) {
+            return ['L', 'U', 'R', 'D'][val - 37];
+        },
         normalizeDirection = function (lastStep, currentStep) {
+            if (!currentStep) {
+                return lastStep;
+            }
             var skipSteps = {
                 L: 'R',
                 R: 'L',
@@ -59,58 +66,65 @@
             if (node[0] < 0) {
                 node[0] = MAX_Y;
             }
+        },
+        drawBlock = function (context, fillStyle, _pos) {
+            var pos = toCellPixelXY(_pos);
+            context.fillStyle = fillStyle;
+            context.fillRect(pos.x + LINE_WIDTH, pos.y + LINE_WIDTH, CELL_WIDTH - LINE_WIDTH, CELL_WIDTH - LINE_WIDTH);
+        },
+        drawGrid = function (context) {
+            var viewPort = CELL_WIDTH * CELL_COUNT;
+            _.times(viewPort / CELL_WIDTH, function (i) {
+                var pos = i * CELL_WIDTH + 0.5 + CELL_WIDTH;
+                context.moveTo(CELL_WIDTH, pos);
+                context.lineTo(viewPort, pos);
+                context.moveTo(pos, CELL_WIDTH);
+                context.lineTo(pos, viewPort);
+            });
+            context.strokeStyle = BLOCK_COLOR;
+            context.lineWidth = LINE_WIDTH;
+            context.stroke();
         };
 
-    var Views = (function (element) {
+    //var Views = (function (element) {
+    //    var context = element.getContext("2d"),
+    //        _drawBlock = _.partial(drawBlock, context);
+    //
+    //    function GridView(grid) {
+    //        var viewPort = CELL_WIDTH * CELL_COUNT;
+    //        element.height = element.width = viewPort + CELL_WIDTH * 2;
+    //        this.render = _.partial(drawGrid, context);
+    //        this.colorCell = _drawBlock;
+    //    }
+    //
+    //    return {GridView};
+    //})(document.getElementById('game'));
+
+    (function (element) {
         var context = element.getContext("2d"),
-            drawBlock = function (fillStyle, _pos) {
-                var pos = toCellPixelXY(_pos);
-                context.fillStyle = fillStyle;
-                context.fillRect(pos.x + LINE_WIDTH, pos.y + LINE_WIDTH, CELL_WIDTH - LINE_WIDTH, CELL_WIDTH - LINE_WIDTH);
-            };
+            _drawBlock = _.partial(drawBlock, context),
+            _drawGrid = _.partial(drawGrid, context);
+        var viewPort = CELL_WIDTH * CELL_COUNT;
+        element.height = element.width = viewPort + CELL_WIDTH * 2;
 
-        function GridView(grid) {
-            var viewPort = CELL_WIDTH * CELL_COUNT;
-            element.height = element.width = viewPort + CELL_WIDTH * 2;
-            this.render = function () {
-                _.times(viewPort / CELL_WIDTH, function (i) {
-                    var pos = i * CELL_WIDTH + 0.5 + CELL_WIDTH;
-                    context.moveTo(CELL_WIDTH, pos);
-                    context.lineTo(viewPort, pos);
-                    context.moveTo(pos, CELL_WIDTH);
-                    context.lineTo(pos, viewPort);
-                });
-                context.strokeStyle = BLOCK_COLOR;
-                context.lineWidth = LINE_WIDTH;
-                context.stroke();
-            };
-
-            this.colorCell = drawBlock;
-        }
-
-        return {GridView};
-    })(document.getElementById('game'));
-
-    (function (views, el) {
-
-        function Game(view) {
-            this.view = view;
-            this.direction = null;
+        function Game() {
+            this.direction = 'D';
             this.snake = [[0, 0]];
             this.apple = [0, 5];
-
-            this.colorRed = _.partial(this.view.colorCell, '#F00');
-            this.colorBlue = _.partial(this.view.colorCell, '#00F');
-            this.colorWhite = _.partial(this.view.colorCell, '#FFF');
+            this._directionQueue = [];
+            this.colorRed = _.partial(_drawBlock, '#F00');
+            this.colorBlue = _.partial(_drawBlock, '#00F');
+            this.colorWhite = _.partial(_drawBlock, '#FFF');
 
             //Start
-            this.view.render();
+            _drawGrid();
             this.colorRed(this.snake[0]);
             this.colorBlue(this.apple);
         }
 
-        Game.prototype.move = function (direction) {
-            this.direction = normalizeDirection(this.direction, direction);
+        Game.prototype.move = function () {
+
+            this.direction = normalizeDirection(this.direction, this._directionQueue.pop());
             var last = _.last(this.snake);
             var step = getStep(this.direction);
             var node = [last[0] + step.x, last[1] + step.y];
@@ -130,17 +144,16 @@
             }
         };
 
-        var gv = new views.GridView();
-        var g = new Game(gv);
-
-        var move = function (direction) {
-            g.move(direction);
+        Game.prototype.pushDirection = function (direction) {
+            if (direction) {
+                this._directionQueue.push(direction);
+            }
         };
 
-        var onRequest = function () {
-            move(randomDirection());
-        };
-        setInterval(onRequest, 10);
-    })(Views);
+        var g = new Game();
+
+        setInterval(g.move.bind(g), GAME_SPEED);
+        document.addEventListener('keydown', _.partial(_.flowRight(g.pushDirection.bind(g), keyCodeToDirection, _.partialRight(_.get, 'keyCode'))));
+    })(document.getElementById('game'));
 
 })();
