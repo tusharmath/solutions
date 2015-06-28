@@ -23,7 +23,8 @@ var randomDirection = function () {
                 context.fillRect(pos.x + LINE_WIDTH, pos.y + LINE_WIDTH, CELL_WIDTH - LINE_WIDTH, CELL_WIDTH - LINE_WIDTH);
             };
 
-        function GridView() {
+        function GridView(grid) {
+            var CELL_width = grid.cellWidth
             var viewPort = CELL_WIDTH * CELL_COUNT;
             element.height = element.width = viewPort + CELL_WIDTH * 2;
             this.render = function () {
@@ -52,6 +53,11 @@ var randomDirection = function () {
     })(document.getElementById('game'));
 
     (function (views, el) {
+        function Grid(size, snake) {
+            this.snake = snake;
+
+        }
+
         function Snake(list) {
             var movements = {
                 L: [-1, 0],
@@ -99,7 +105,7 @@ var randomDirection = function () {
             }.bind(this);
         }
 
-        var snake = new Snake([
+        var s = new Snake([
             [0, 1],
             [1, 1],
             [1, 2],
@@ -107,19 +113,20 @@ var randomDirection = function () {
             [1, 4],
             [2, 4]
         ]);
-        var g = new views.GridView();
-        var s = new views.SnakeView(snake);
-        g.render();
-        s.render();
+        var g = new Grid(CELL_COUNT, s)
+        var gv = new views.GridView(g);
+        var sv = new views.SnakeView(s);
+        gv.render();
+        sv.render();
         var move = function (direction) {
-            snake.move(direction);
-            s.render();
+            s.move(direction);
+            sv.render();
         };
 
         var onRequest = function () {
             move(randomDirection());
         };
-        setInterval(onRequest, 10);
+        setInterval(onRequest, 1000);
     })(Views);
 
 })();
