@@ -4,7 +4,10 @@
         LINE_WIDTH = 1,
         GAME_SPEED = 100,
         BLOCK_COLOR = '#F00',
-        CELL_COUNT = 20,
+        GRID_SIZE = 20,
+        getScore = function (len) {
+            return (len - 1) * 100;
+        },
         toXY = function (pos) {
             return {x: pos[0], y: pos[1]};
         },
@@ -18,7 +21,7 @@
             return ['L', 'R', 'U', 'D'][_.random(0, 3)];
         },
         randomCell = function () {
-            return [_.random(0, CELL_COUNT - 2), _.random(0, CELL_COUNT - 2)];
+            return [_.random(0, GRID_SIZE - 2), _.random(0, GRID_SIZE - 2)];
         },
         cellEqual = function (a, b) {
             return a[0] === b[0] && a[1] == b[1];
@@ -66,6 +69,7 @@
             if (node[0] < 0) {
                 node[0] = MAX_Y;
             }
+            return node;
         },
         drawBlock = function (context, fillStyle, _pos) {
             var pos = toCellPixelXY(_pos);
@@ -73,7 +77,7 @@
             context.fillRect(pos.x + LINE_WIDTH, pos.y + LINE_WIDTH, CELL_WIDTH - LINE_WIDTH, CELL_WIDTH - LINE_WIDTH);
         },
         drawGrid = function (context) {
-            var viewPort = CELL_WIDTH * CELL_COUNT;
+            var viewPort = CELL_WIDTH * GRID_SIZE;
             _.times(viewPort / CELL_WIDTH, function (i) {
                 var pos = i * CELL_WIDTH + 0.5 + CELL_WIDTH;
                 context.moveTo(CELL_WIDTH, pos);
@@ -87,6 +91,24 @@
         },
         setText = function (context, text) {
             context.innerHTML = text;
+        },
+        create2dArray = function (size, start) {
+            var mapRange = _.partial(_.map, _.times(size));
+            return mapRange(_.partial(mapRange, _.constant(start)));
+        },
+        createSquareMap = function (size, start) {
+            var map = create2dArray(size, start);
+            return {
+                set: function (item, val) {
+                    var pos = toXY(item);
+                    map[pos.x][pos.y] = val;
+                },
+                get: function (item) {
+                    var pos = toXY(item);
+                    return map[pos.x][pos.y];
+                }
+            }
+
         };
 
     (function (canvas, score) {
@@ -94,13 +116,14 @@
             _drawBlock = _.partial(drawBlock, context),
             _drawGrid = _.partial(drawGrid, context),
             _setScore = _.partial(setText, score);
-        var viewPort = CELL_WIDTH * CELL_COUNT;
+        var viewPort = CELL_WIDTH * GRID_SIZE;
         canvas.height = canvas.width = viewPort + CELL_WIDTH * 2;
 
         function Game() {
             this.direction = 'D';
             this.snake = [[0, 0]];
             this.apple = [0, 5];
+            this.grid = createSquareMap(GRID_SIZE, 0);
             this._directionQueue = [];
             this.colorRed = _.partial(_drawBlock, '#F00');
             this.colorBlue = _.partial(_drawBlock, '#00F');
@@ -108,6 +131,7 @@
 
             //Start
             _drawGrid();
+            this.grid.set(this.snake[0], 1);
             this.colorRed(this.snake[0]);
             this.colorBlue(this.apple);
         }
@@ -115,16 +139,21 @@
         Game.prototype.move = function () {
 
             this.direction = normalizeDirection(this.direction, this._directionQueue.pop());
-            var last = _.last(this.snake);
-            var step = getStep(this.direction);
-            var node = [last[0] + step.x, last[1] + step.y];
+            var last = _.last(this.snake),
+                step = getStep(this.direction),
+                node = normalizeNode(GRID_SIZE, [last[0] + step.x, last[1] + step.y]),
+                tail = this.snake.shift();
+            if (this.grid.get(node) === 1) {
+                clearInterval(timer);
+                return _setScore('GAME OVER: ' + getScore(this.snake.length));
+            }
 
-            normalizeNode(CELL_COUNT, node);
             this.snake.push(node);
+            this.colorRed(node);
+            this.grid.set(node, 1);
+            this.grid.set(tail, 0);
 
             //Screen Color;
-            this.colorRed(node);
-            var tail = this.snake.shift();
             if (cellEqual(this.apple, tail)) {
                 this.snake.unshift(tail);
                 this.apple = randomCell();
@@ -132,7 +161,7 @@
             } else {
                 this.colorWhite(tail);
             }
-            _setScore(this.snake.length * 100);
+            _setScore(getScore(this.snake.length));
         };
 
         Game.prototype.pushDirection = function (direction) {
@@ -143,7 +172,7 @@
 
         var g = new Game();
 
-        setInterval(g.move.bind(g), GAME_SPEED);
+        var timer = setInterval(g.move.bind(g), GAME_SPEED);
         document.addEventListener('keydown', _.partial(_.flowRight(g.pushDirection.bind(g), keyCodeToDirection, _.partialRight(_.get, 'keyCode'))));
     })(document.getElementById('game'), document.getElementById('score'));
 
