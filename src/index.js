@@ -7,11 +7,12 @@
         toXY = function (pos) {
             return {x: pos[0], y: pos[1]};
         },
-        toCell = function (pos) {
+        toCellPixel = function (pos) {
             pos.x = (pos.x + 1) * CELL_WIDTH;
             pos.y = (pos.y + 1) * CELL_WIDTH;
             return pos;
         },
+        toCellPixelXY = _.flowRight(toCellPixel, toXY),
         randomDirection = function () {
             return ['L', 'R', 'U', 'D'][_.random(0, 3)];
         },
@@ -56,13 +57,13 @@
 
     var Views = (function (element) {
         var context = element.getContext("2d"),
-            drawBlock = function (fillStyle, pos) {
+            drawBlock = function (fillStyle, _pos) {
+                var pos = toCellPixelXY(_pos);
                 context.fillStyle = fillStyle;
                 context.fillRect(pos.x + LINE_WIDTH, pos.y + LINE_WIDTH, CELL_WIDTH - LINE_WIDTH, CELL_WIDTH - LINE_WIDTH);
             };
 
         function GridView(grid) {
-            var CELL_width = grid.cellWidth;
             var viewPort = CELL_WIDTH * CELL_COUNT;
             element.height = element.width = viewPort + CELL_WIDTH * 2;
             this.render = function () {
@@ -77,63 +78,53 @@
                 context.lineWidth = LINE_WIDTH;
                 context.stroke();
             };
+
+            this.colorCell = drawBlock;
         }
 
-        function SnakeView(snake) {
-            var _drawBlock = _.curry(drawBlock);
-            this.render = function () {
-                _.each(_(snake.printSteps).map(toXY).map(toCell).value(), _drawBlock(BLOCK_COLOR));
-                _drawBlock('#FFF')(toCell(toXY(snake.clearSteps)));
-            };
-        }
-
-        return {GridView, SnakeView};
+        return {GridView};
     })(document.getElementById('game'));
 
     (function (views, el) {
-        function Grid(size, snake) {
-            this.snake = snake;
 
-        }
-
-        function Snake(list) {
-            this.printSteps = list;
-            this.clearSteps = {};
+        function Game(view) {
+            this.view = view;
             this.lastStep = null;
-            this.move = function (step) {
-                step = normalizeStep(this.lastStep, step);
-                var last = _.last(list);
-                this.clearSteps = list.shift();
-                var _movements = getStep(step);
-                var node = [last[0] + _movements.x, last[1] + _movements.y];
-                normalizeNode(CELL_COUNT, node);
-                list.push(node);
-                this.lastStep = step;
-            }.bind(this);
+            this.snake = [[0, 0]];
+            this.colorRed = _.partial(this.view.colorCell, '#F00');
+            this.colorBlue = _.partial(this.view.colorCell, '#00F');
+            this.colorWhite = _.partial(this.view.colorCell, '#FFF');
+
+            //Start
+            this.view.render();
+            this.colorRed(this.snake[0]);
         }
 
-        var s = new Snake([
-            [0, 1],
-            [1, 1],
-            [1, 2],
-            [1, 3],
-            [1, 4],
-            [2, 4]
-        ]);
-        var g = new Grid(CELL_COUNT, s)
-        var gv = new views.GridView(g);
-        var sv = new views.SnakeView(s);
-        gv.render();
-        sv.render();
+        Game.prototype.move = function (step) {
+            this.lastStep = step = normalizeStep(this.lastStep, step);
+            var last = _.last(this.snake);
+            var _movements = getStep(step);
+            var node = [last[0] + _movements.x, last[1] + _movements.y];
+
+            normalizeNode(CELL_COUNT, node);
+            this.snake.push(node);
+
+            //Screen Color;
+            this.colorRed(node);
+            this.colorWhite(this.snake.shift());
+        };
+
+        var gv = new views.GridView();
+        var g = new Game(gv);
+
         var move = function (direction) {
-            s.move(direction);
-            sv.render();
+            g.move(direction);
         };
 
         var onRequest = function () {
             move(randomDirection());
         };
-        setInterval(onRequest, 200);
+        setInterval(onRequest, 500);
     })(Views);
 
 })();
