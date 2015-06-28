@@ -1,3 +1,6 @@
+var randomDirection = function () {
+    return ['L', 'R', 'U', 'D'][_.random(0, 3)];
+};
 (function () {
     "use strict";
 
@@ -40,7 +43,6 @@
         function SnakeView(snake) {
             var _drawBlock = _.curry(drawBlock);
             this.render = function () {
-
                 _.each(_.map(snake.print, toXY), _drawBlock(BLOCK_COLOR));
                 _drawBlock('#FFF')(toXY(snake.clear));
             };
@@ -51,15 +53,48 @@
 
     (function (views, el) {
         function Snake(list) {
+            var movements = {
+                L: [-1, 0],
+                R: [1, 0],
+                U: [0, -1],
+                D: [0, 1]
+            };
+            var ignoredMovements = {
+                L: 'R',
+                R: 'L',
+                U: 'D',
+                D: 'U'
+            };
             this.print = list;
             this.clear = {};
-            this.right = function () {
+            this.lastDirection = null;
+
+            this.move = function (key) {
+                if (key === ignoredMovements[this.lastDirection]) {
+                    key = this.lastDirection;
+                }
+                this.lastDirection = key;
                 var last = _.last(list);
                 this.clear = list.shift();
-                var node = [last[0] + 1, last[1]];
-                if (node[0] >= CELL_COUNT - 1) {
+                var node = [last[0] + movements[key][0], last[1] + movements[key][1]];
+                var MAX_X = CELL_COUNT - 1,
+                    MAX_Y = CELL_COUNT - 2;
+                if (node[1] >= MAX_X) {
+                    node[1] = 0;
+                }
+                if (node[1] < 0) {
+                    node[1] = MAX_Y;
+                }
+
+                if (node[0] >= MAX_X) {
                     node[0] = 0;
                 }
+
+                if (node[0] < 0) {
+                    node[0] = MAX_Y;
+                }
+
+                console.log(_.find(list, node));
                 list.push(node);
             }.bind(this);
         }
@@ -76,10 +111,15 @@
         var s = new views.SnakeView(snake);
         g.render();
         s.render();
-        setInterval(function () {
-            snake.right();
+        var move = function (direction) {
+            snake.move(direction);
             s.render();
-        }, 100);
+        };
+
+        var onRequest = function () {
+            move(randomDirection());
+        };
+        setInterval(onRequest, 10);
     })(Views);
 
 })();
