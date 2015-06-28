@@ -16,7 +16,13 @@
         randomDirection = function () {
             return ['L', 'R', 'U', 'D'][_.random(0, 3)];
         },
-        normalizeStep = function (lastStep, currentStep) {
+        randomCell = function () {
+            return [_.random(0, CELL_COUNT - 2), _.random(0, CELL_COUNT - 2)];
+        },
+        cellEqual = function (a, b) {
+            return a[0] === b[0] && a[1] == b[1];
+        },
+        normalizeDirection = function (lastStep, currentStep) {
             var skipSteps = {
                 L: 'R',
                 R: 'L',
@@ -89,8 +95,10 @@
 
         function Game(view) {
             this.view = view;
-            this.lastStep = null;
+            this.direction = null;
             this.snake = [[0, 0]];
+            this.apple = [0, 5];
+
             this.colorRed = _.partial(this.view.colorCell, '#F00');
             this.colorBlue = _.partial(this.view.colorCell, '#00F');
             this.colorWhite = _.partial(this.view.colorCell, '#FFF');
@@ -98,20 +106,28 @@
             //Start
             this.view.render();
             this.colorRed(this.snake[0]);
+            this.colorBlue(this.apple);
         }
 
-        Game.prototype.move = function (step) {
-            this.lastStep = step = normalizeStep(this.lastStep, step);
+        Game.prototype.move = function (direction) {
+            this.direction = normalizeDirection(this.direction, direction);
             var last = _.last(this.snake);
-            var _movements = getStep(step);
-            var node = [last[0] + _movements.x, last[1] + _movements.y];
+            var step = getStep(this.direction);
+            var node = [last[0] + step.x, last[1] + step.y];
 
             normalizeNode(CELL_COUNT, node);
             this.snake.push(node);
 
             //Screen Color;
             this.colorRed(node);
-            this.colorWhite(this.snake.shift());
+            var tail = this.snake.shift();
+            if (cellEqual(this.apple, tail)) {
+                this.snake.unshift(tail);
+                this.apple = randomCell();
+                this.colorBlue(this.apple);
+            } else {
+                this.colorWhite(tail);
+            }
         };
 
         var gv = new views.GridView();
@@ -124,7 +140,7 @@
         var onRequest = function () {
             move(randomDirection());
         };
-        setInterval(onRequest, 500);
+        setInterval(onRequest, 10);
     })(Views);
 
 })();
