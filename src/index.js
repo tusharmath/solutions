@@ -84,28 +84,18 @@
             context.strokeStyle = BLOCK_COLOR;
             context.lineWidth = LINE_WIDTH;
             context.stroke();
+        },
+        setText = function (context, text) {
+            context.innerHTML = text;
         };
 
-    //var Views = (function (element) {
-    //    var context = element.getContext("2d"),
-    //        _drawBlock = _.partial(drawBlock, context);
-    //
-    //    function GridView(grid) {
-    //        var viewPort = CELL_WIDTH * CELL_COUNT;
-    //        element.height = element.width = viewPort + CELL_WIDTH * 2;
-    //        this.render = _.partial(drawGrid, context);
-    //        this.colorCell = _drawBlock;
-    //    }
-    //
-    //    return {GridView};
-    //})(document.getElementById('game'));
-
-    (function (element) {
-        var context = element.getContext("2d"),
+    (function (canvas, score) {
+        var context = canvas.getContext("2d"),
             _drawBlock = _.partial(drawBlock, context),
-            _drawGrid = _.partial(drawGrid, context);
+            _drawGrid = _.partial(drawGrid, context),
+            _setScore = _.partial(setText, score);
         var viewPort = CELL_WIDTH * CELL_COUNT;
-        element.height = element.width = viewPort + CELL_WIDTH * 2;
+        canvas.height = canvas.width = viewPort + CELL_WIDTH * 2;
 
         function Game() {
             this.direction = 'D';
@@ -142,6 +132,7 @@
             } else {
                 this.colorWhite(tail);
             }
+            _setScore(this.snake.length * 100);
         };
 
         Game.prototype.pushDirection = function (direction) {
@@ -154,6 +145,6 @@
 
         setInterval(g.move.bind(g), GAME_SPEED);
         document.addEventListener('keydown', _.partial(_.flowRight(g.pushDirection.bind(g), keyCodeToDirection, _.partialRight(_.get, 'keyCode'))));
-    })(document.getElementById('game'));
+    })(document.getElementById('game'), document.getElementById('score'));
 
 })();

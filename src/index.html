@@ -10,14 +10,25 @@
             width: 100%;
             margin: 0;
             padding: 0;
+            font-family: "Lucida Grande", "Helvetica Nueue", Arial, sans-serif;
+            text-align: center;
+        }
+        #game{
+            margin: auto;
+            display: block;
         }
     </style>
 </head>
 <body>
 <div>
-    <canvas id="game"></canvas>
-    <script src="bower_components/lodash/lodash.js"></script>
-    <script src="index.js"></script>
+    <div id="container">
+        <canvas id="game"></canvas>
+        <div>
+            <h1 id="score">0</h1>
+        </div>
+        <script src="bower_components/lodash/lodash.js"></script>
+        <script src="index.js"></script>
+    </div>
 </div>
 </body>
 </html>
