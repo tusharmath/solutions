@@ -1,10 +1,12 @@
 (function (canvas, score) {
     "use strict";
-    var CELL_WIDTH = 20,
+    var
+        GRID_SIZE = 20,
+        SCREEN_WIDTH = _.min([window.innerWidth, window.innerHeight]),
+        CELL_WIDTH = SCREEN_WIDTH / GRID_SIZE,
         LINE_WIDTH = 1,
         GAME_SPEED = 100,
         BLOCK_COLOR = '#F00',
-        GRID_SIZE = 20,
         MAX_CELL = (GRID_SIZE - 2),
         context = canvas.getContext("2d"),
         getScore = function (len) {
@@ -79,7 +81,7 @@
         },
         drawGrid = function (context) {
             var viewPort = CELL_WIDTH * GRID_SIZE;
-            _.times(viewPort / CELL_WIDTH, function (i) {
+            _.times(GRID_SIZE, function (i) {
                 var pos = i * CELL_WIDTH + 0.5 + CELL_WIDTH;
                 context.moveTo(CELL_WIDTH, pos);
                 context.lineTo(viewPort, pos);

@@ -12,10 +12,18 @@
             padding: 0;
             font-family: "Lucida Grande", "Helvetica Nueue", Arial, sans-serif;
             text-align: center;
+            overflow: hidden;
         }
-        #game{
+
+        #game {
             margin: auto;
             display: block;
+        }
+
+        #score-board {
+            position: fixed;
+            top: 40%;
+            left: 10px;
         }
     </style>
 </head>
@@ -24,7 +32,12 @@
     <div id="container">
         <canvas id="game"></canvas>
         <div>
-            <h1 id="score">0</h1>
+            <span id="score-board">
+                <h1>
+                    <span>SCORE:</span>
+                    <span id="score"></span>
+                </h1>
+            </span>
         </div>
         <script src="bower_components/lodash/lodash.js"></script>
         <script src="index.js"></script>
