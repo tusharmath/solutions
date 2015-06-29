@@ -5,7 +5,7 @@
         SCREEN_WIDTH = _.min([window.innerWidth, window.innerHeight]),
         CELL_WIDTH = SCREEN_WIDTH / GRID_SIZE,
         LINE_WIDTH = 1,
-        GAME_SPEED = 100,
+        GAME_SPEED = 50,
         BLOCK_COLOR = '#F00',
         MAX_CELL = (GRID_SIZE - 2),
         context = canvas.getContext("2d"),
