@@ -115,6 +115,11 @@
         gameEnded = function (_collisionMatrix, node) {
             return _collisionMatrix.get(node) === 1;
         },
+        applyWormhole = function () {
+            var wormhole = random2Cells();
+            _colorWormhole(wormhole);
+            return wormhole;
+        },
         _drawBlock = _.partial(drawBlock, context),
         _drawGrid = _.partial(drawGrid, context),
         _setScore = _.partial(setText, score),
@@ -168,12 +173,11 @@
                 }
                 snake.push(end);
                 removed = snake.shift();
-                wormhole = random2Cells();
+                wormhole = applyWormhole();
                 _snakeBodyMatrix.set(end, 1).set(removed, 0);
                 _colorSnake(nextStep);
                 _colorEmptiness(removed);
                 _colorEmptiness(start);
-                _colorWormhole(wormhole);
 
             } else {
                 snake.push(nextStep);
