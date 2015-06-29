@@ -125,6 +125,10 @@
             _colorApple(apple);
             return apple;
         },
+        snakeCharmer = function (snake, cell) {
+            snake.push(cell);
+            return snake.shift();
+        },
         _drawBlock = _.partial(drawBlock, context),
         _drawGrid = _.partial(drawGrid, context),
         _setScore = _.partial(setText, score),
@@ -144,8 +148,8 @@
             wormhole = random2Cells(),
             _nextDirection = null,
             _snakeBodyMatrix = createSquareMap(GRID_SIZE, 0),
-            _gameEnded = _.partial(gameEnded, _snakeBodyMatrix)
-
+            _gameEnded = _.partial(gameEnded, _snakeBodyMatrix),
+            _snakeCharmer = _.partial(snakeCharmer, snake)
             ;
 
         //Start
@@ -161,13 +165,13 @@
             var removed, last = _.last(snake),
                 nextStep = getStep(_previousDirection),
                 nextStep = normalizeStep(GRID_SIZE, [last[0] + nextStep[0], last[1] + nextStep[1]]);
+            _colorSnake(nextStep);
             if (_gameEnded(nextStep)) {
                 _stopThrottle();
                 _setScore('GAME OVER: ' + getScore(snake.length));
             } else if (cellEqual(apple, nextStep)) {
                 snake.push(nextStep);
                 _snakeBodyMatrix.set(nextStep, 1);
-                _colorSnake(nextStep);
                 apple = applyApple();
             } else if (_.any(wormhole, _.partial(cellEqual, nextStep))) {
                 var start = wormhole[0], end = wormhole[1];
@@ -175,18 +179,14 @@
                     start = wormhole[1];
                     end = wormhole[0];
                 }
-                snake.push(end);
-                removed = snake.shift();
+                removed = _snakeCharmer(end);
                 wormhole = applyWormhole();
                 _snakeBodyMatrix.set(end, 1).set(removed, 0);
-                _colorSnake(nextStep);
-                _.each([removed, start], _colorEmptiness);
+                _.each([end, removed, start], _colorEmptiness);
 
             } else {
-                snake.push(nextStep);
-                removed = snake.shift();
+                removed = _snakeCharmer(nextStep);
                 _snakeBodyMatrix.set(nextStep, 1).set(removed, 0);
-                _colorSnake(nextStep);
                 _colorEmptiness(removed);
             }
 
