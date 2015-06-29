@@ -120,6 +120,11 @@
             _colorWormhole(wormhole);
             return wormhole;
         },
+        applyApple = function () {
+            var apple = randomCell();
+            _colorApple(apple);
+            return apple;
+        },
         _drawBlock = _.partial(drawBlock, context),
         _drawGrid = _.partial(drawGrid, context),
         _setScore = _.partial(setText, score),
@@ -163,8 +168,7 @@
                 snake.push(nextStep);
                 _snakeBodyMatrix.set(nextStep, 1);
                 _colorSnake(nextStep);
-                apple = randomCell();
-                _colorApple(apple);
+                apple = applyApple();
             } else if (_.any(wormhole, _.partial(cellEqual, nextStep))) {
                 var start = wormhole[0], end = wormhole[1];
                 if (cellEqual(nextStep, wormhole[1])) {
