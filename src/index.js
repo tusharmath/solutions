@@ -176,8 +176,7 @@
                 wormhole = applyWormhole();
                 _snakeBodyMatrix.set(end, 1).set(removed, 0);
                 _colorSnake(nextStep);
-                _colorEmptiness(removed);
-                _colorEmptiness(start);
+                _.each([removed, start], _colorEmptiness);
 
             } else {
                 snake.push(nextStep);
