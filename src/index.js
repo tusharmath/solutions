@@ -129,6 +129,18 @@
             snake.push(cell);
             return snake.shift();
         },
+        directWormhole = function (wormhole, cell) {
+            var start = wormhole[0], end = wormhole[1];
+            if (cellEqual(cell, wormhole[1])) {
+                start = wormhole[1];
+                end = wormhole[0];
+            }
+            return {start, end};
+        },
+        onWormhole = function (wormhole, nextStep) {
+            return _.any(wormhole, _.partial(cellEqual, nextStep));
+        },
+        onApple = cellEqual,
         _drawBlock = _.partial(drawBlock, context),
         _drawGrid = _.partial(drawGrid, context),
         _setScore = _.partial(setText, score),
@@ -169,16 +181,14 @@
             if (_gameEnded(nextStep)) {
                 _stopThrottle();
                 _setScore('GAME OVER: ' + getScore(snake.length));
-            } else if (cellEqual(apple, nextStep)) {
+            } else if (onApple(apple, nextStep)) {
                 snake.push(nextStep);
                 _snakeBodyMatrix.set(nextStep, 1);
                 apple = applyApple();
-            } else if (_.any(wormhole, _.partial(cellEqual, nextStep))) {
-                var start = wormhole[0], end = wormhole[1];
-                if (cellEqual(nextStep, wormhole[1])) {
-                    start = wormhole[1];
-                    end = wormhole[0];
-                }
+            } else if (onWormhole(wormhole, nextStep)) {
+                var __ret = directWormhole(wormhole, nextStep),
+                    start = __ret.start,
+                    end = __ret.end;
                 removed = _snakeCharmer(end);
                 wormhole = applyWormhole();
                 _snakeBodyMatrix.set(end, 1).set(removed, 0);
