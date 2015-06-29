@@ -201,7 +201,7 @@
                 _snakeBodyMatrix.set(nextStep, 1).set(removed, 0);
                 _colorEmptiness(removed);
             }
-
+            _setScore(getScore(snake.length));
         };
 
         this.setDirection = function (direction) {
