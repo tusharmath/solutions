@@ -1,17 +1,37 @@
-##TOPIC
-
-##Setup Instructions
+##Problem Statement
 
 
-##Features
-0. Multi paradigm approach: Functional + Object Oriented
+Implement a Bill Manager to track bills among friends
 
-0. Documentation done via [JS Docs](http://usejsdoc.org/)
+Using HTML/CSS/Javascript, create a page to add, edit and delete "n" number of friends and "n" bills list.
 
-0. Unit test coverage
+We should be able to link a friend to the bill and split the bill equally to the friends added to that bill.
 
-0. ES6 based syntax as of what is supported by [IO.JS@2.2.1](https://iojs.org/en/index.html)
+We should be able to view the list of bills and friends.
 
-0. Requires IO.JS and mocha to be globally installed
+Optional Items:
 
-0. Can be used directly via `require` as a module
+In view mode, Filter/Search to find the friends and bills added.
+
+Use local storage to persist the data
+Note -
+1. Input fields for a bill are given below:
+  a) Expense Description
+  b) Amount
+  c) Friends
+2. Object Oriented JS Code would be a plus.
+  (For reference, you can go through splitwise.com)
+
+Some basic rules to keep in mind
+
+Code should work in multiple browsers (IE, FF and Chrome).
+
+Use native javascript. No third party libraries are allowed.
+
+Once done with the test, mail us back the files in zip format.
+
+If you have any doubts regarding the question, call me on my number  -  08125793656
+
+Regards,
+Mathan.
+
