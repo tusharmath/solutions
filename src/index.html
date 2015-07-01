@@ -3,65 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <title>Bills</title>
-    <style>
-
-    </style>
+    <link rel="stylesheet" href="main.css"/>
 </head>
 <body>
-<div>
+<div class="container">
+    <h1>Transactions</h1>
+
+    <form id="new-transaction">
+        <span>#New</span>
+        <span class="lead"><input type="text" name="payer" placeholder="payer"/></span>
+        <small class="text-muted">paid</small>
+        <span class="lead"><input type="text" name="amount" placeholder="amount"/></span>
+        <small>for</small>
+        <span class="lead"><input type="text" payees="payees" placeholder="payees (csv)"/></span>
+        <button class="button-add">save</button>
+    </form>
+    <hr/>
     <div>
-        <span><input id="add-bill-amount" type="text" placeholder="enter bill amount"></span>
-        <span><input id="add-bill-button" type="button" value="add bill"/></span>
+        <span>#1</span>
+        <span class="lead">Ajay</span>
+        <small class="text-muted">paid</small>
+        <span class="lead">550$</span>
+        <small class="text-muted">for</small>
+        <span class="lead">Ramesh, Chirang and himself</span>
     </div>
+    <hr/>
+    <div>
+        <span>#1</span>
+        <span class="lead">Ajay</span>
+        <small class="text-muted">paid</small>
+        <span class="lead">550$</span>
+        <small class="text-muted">for</small>
+        <span class="lead">Ramesh, Chirang and himself</span>
+    </div>
+</div>
+
+<div class="container">
+    <h1>Net Balance</h1>
+
+    <div>
+        <span style="width: 50%;display: inline-block">User</span>
+        <span>Balance</span>
+        <hr/>
+    </div>
+    <div>
+        <span class="lead" style="width: 50%; display: inline-block">Ajay</span>
+        <span class="lead">500$</span>
+    </div>
+    <hr/>
 </div>
 </body>
 <script>
-    (function (document) {
-        "use strict";
-        var storage = localStorage,
-                $ = document.getElementById.bind(document),
-                saveDb = function (val) {
-                    storage.setItem('data', JSON.stringify(val));
-                },
-                retrieveDb = function () {
-                    var data = storage.getItem('data');
-                    return data ? JSON.parse(data) : {bills: [], people: []};
-                }
-                ;
-        $.on = document.addEventListener;
-
-        function Person(name) {
-            this.name = name;
-        }
-
-        function Bill(amount, people) {
-            this.amount = amount;
-            this.people = people;
-            this.addPerson = function (person) {
-                this.people.push(person);
-            };
-        }
-
-        function Main() {
-            var data = retrieveDb();
-            this.bills = data.bills;
-            this.people = data.people;
-
-            this.addPerson = function (personName) {
-                var person = new Person(personName);
-                this.bills.push(person);
-                saveDb(this);
-            }.bind(this);
-
-            this.addBill = function (amount, people) {
-                var bill = new Bill(amount, people);
-                this.bills.push(bill);
-                saveDb(this);
-            }.bind(this);
-        }
-
-        var m = new Main();
-
-    })(document);
 </script>
 </html>

@@ -1,6 +1,4 @@
 ##Problem Statement
-
-
 Implement a Bill Manager to track bills among friends
 
 Using HTML/CSS/Javascript, create a page to add, edit and delete "n" number of friends and "n" bills list.
@@ -30,8 +28,6 @@ Use native javascript. No third party libraries are allowed.
 
 Once done with the test, mail us back the files in zip format.
 
-If you have any doubts regarding the question, call me on my number  -  08125793656
-
-Regards,
-Mathan.
+##Approach
+1. Event driven, pub sub based design paradigm.
 
