@@ -13,10 +13,7 @@ body, html {
 .container {
     background-color: #fff;
     width: 80%;
-    margin-top: 20px;
-    margin-right: auto;
-    margin-left: auto;
-    margin-bottom: auto;
+    margin: 20px auto auto;
     padding: 40px;
     box-shadow: 4px 4px 4px #ccc;
 }
