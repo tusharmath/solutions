@@ -113,7 +113,7 @@
         },
         _transactionTemplate = _template('#transaction-html'),
         _balanceTemplate = _template('#balance-html'),
-        _editTransactionTemplate = _template('#edit-transaction'),
+        _editTransactionTemplate = _template('#edit-transaction-html'),
         _transactionToHtml = function (transaction, index) {
             return _transactionTemplate({transaction, index});
         },
@@ -183,6 +183,21 @@
         _render();
     });
 
+    _delegate($transactionList, 'click', '.edit-button', function (ev) {
+        var index = ev.target.attributes.index.value;
+
+        var transaction = transactions[index];
+        _remove(transactions, index);
+        _setInnerHtml($transactionList, _editTransactionTemplate({transaction, index}));
+    });
+
+    _delegate($transactionList, 'click', '#update', function () {
+        var transaction = getTransactionFromForm($('#edit-transaction'), ['index'].concat(TRANSACTION_FIELDS));
+        _addTransaction(transaction);
+        userBalance = {};
+        _map(transactions, _updateUserBalance.bind(null, userBalance));
+        _render();
+    });
     _map([
         {payer: 'Ajay', amount: 300, payees: ['Ajay', 'Vijay', 'Peejay']},
         {payer: 'Peejay', amount: 100, payees: ['Ajay', 'Vijay']}

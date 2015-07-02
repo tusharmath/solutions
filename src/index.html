@@ -36,14 +36,17 @@
         <!-- Placeholder -->
     </div>
 </div>
-<template id="edit-transaction">
-    <form>
+<template id="edit-transaction-html">
+    <form id="edit-transaction">
         <span>#Edit</span>
 
-        <div><input type="text" name="payer" placeholder="payer" value="{{obj.payer}}"/></div>
-        <div><input type="text" name="amount" placeholder="amount" value="{{obj.amount}}"/></div>
-        <div><input type="text" name="payees" placeholder="payees (csv)" value="{{obj.payees.join(', ')}}"/></div>
-        <div><a href="javascript: void 0;" class="button button-primary" id="update">save</a></div>
+        <div><input type="text" name="payer" placeholder="payer" value="{{obj.transaction.payer}}"/></div>
+        <div><input type="text" name="amount" placeholder="amount" value="{{obj.transaction.amount}}"/></div>
+        <div>
+            <input type="text" name="payees" placeholder="payees (csv)" value="{{obj.transaction.payees.join(', ')}}"/>
+        </div>
+        <div><a href="javascript: void 0;" class="button button-primary" id="update">update</a>
+        </div>
         <hr/>
     </form>
 </template>
@@ -57,8 +60,9 @@
         <span class="lead">{{obj.transaction.payees.join(', ')}}</span>
 
         <div>
-            <a href="javascript: void 0;" class="button button-warning edit-button" id="edit">edit</a>
-            <a href="javascript: void 0;" class="button button-danger delete-button" id="delete" index="{{obj.index}}">delete</a>
+            <a href="javascript: void 0;" index="{{obj.index}}" class="button button-warning edit-button"
+               id="edit">edit</a>
+            <a href="javascript: void 0;" index="{{obj.index}}" class="button button-danger delete-button" id="delete">delete</a>
         </div>
     </div>
     <hr/>
