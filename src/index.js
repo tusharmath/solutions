@@ -12,6 +12,13 @@
         $transactionListView = $('#transaction-list'),
         $netBalanceListView = $('#net-balance-list'),
         transactions = [],
+        storage = localStorage,
+        _commitTransactions = function () {
+            storage.setItem('transactions', JSON.stringify(transactions));
+        },
+        _extractTransactions = function () {
+            return JSON.parse(storage.getItem('transactions'));
+        },
         _isArray = function (item) {
             return item instanceof  Array;
         },
@@ -212,7 +219,14 @@
         _delegateTransactionViewClick = _delegate.bind(null, $transactionListView, 'click'),
         _getTransactionForm = _flow(_transaction, _toObject, _getFormData),
         _getNewTransactionForm = _getTransactionForm.bind(null, $newTransaction, TRANSACTION_FIELDS),
-        _addTransaction = _add.bind(null, transactions);
+        _addTransaction = function (transaction) {
+            _add(transactions, transaction);
+            _commitTransactions(transactions);
+        },
+        _removeTransaction = function (i) {
+            _remove(transactions, i);
+            _commitTransactions(transactions);
+        };
 
     $create.addEventListener('click', function () {
         var transaction = _getNewTransactionForm();
@@ -225,14 +239,14 @@
     });
 
     _delegateTransactionViewClick('.delete-button', function (ev) {
-        _remove(transactions, _get(ev, INDEX_ATTRIBUTE_FIELD_NAME));
+        _removeTransaction(_get(ev, INDEX_ATTRIBUTE_FIELD_NAME));
         _render();
     });
 
     _delegateTransactionViewClick('.edit-button', function (ev) {
         var i = parseInt(_get(ev, INDEX_ATTRIBUTE_FIELD_NAME), 10);
         var transaction = transactions[i];
-        _remove(transactions, i);
+        _removeTransaction(i);
         _setInnerHtml($transactionListView, _editTransactionTemplate({transaction, i}));
     });
 
@@ -241,10 +255,7 @@
         _addTransaction(transaction);
         _render();
     });
-    _map([
-        {payer: 'Ajay', amount: 300, payees: ['Ajay', 'Vijay', 'Peejay'], description: 'food and snacks'},
-        {payer: 'Peejay', amount: 100, payees: ['Ajay', 'Vijay'], description: 'tuition fee'}
-    ], _addTransaction);
+    _map(_extractTransactions(), _addTransaction);
 
     _map(transactions, _calcTransactionBalance.bind(null, {}));
     _clearForm($newTransaction, TRANSACTION_FIELDS);
