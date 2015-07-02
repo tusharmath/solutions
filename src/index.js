@@ -113,6 +113,7 @@
         },
         _transactionTemplate = _template('#transaction-html'),
         _balanceTemplate = _template('#balance-html'),
+        _editTransactionTemplate = _template('#edit-transaction'),
         _transactionToHtml = function (transaction, index) {
             return _transactionTemplate({transaction, index});
         },

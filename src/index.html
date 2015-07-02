@@ -36,6 +36,17 @@
         <!-- Placeholder -->
     </div>
 </div>
+<template id="edit-transaction">
+    <form>
+        <span>#Edit</span>
+
+        <div><input type="text" name="payer" placeholder="payer" value="{{obj.payer}}"/></div>
+        <div><input type="text" name="amount" placeholder="amount" value="{{obj.amount}}"/></div>
+        <div><input type="text" name="payees" placeholder="payees (csv)" value="{{obj.payees.join(', ')}}"/></div>
+        <div><a href="javascript: void 0;" class="button button-primary" id="update">save</a></div>
+        <hr/>
+    </form>
+</template>
 <template id="transaction-html">
     <div>
         <span>{{obj.index}}</span>
