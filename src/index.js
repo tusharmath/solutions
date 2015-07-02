@@ -146,6 +146,25 @@
             transactions.push(transaction);
             _updateUserBalance(userBalance, transaction);
         },
+        _equal = function (val1, val2) {
+            return val1 === val2;
+        },
+        _find = function (list, predicate) {
+            for (var i = 0; i < list.length; i++) {
+                var obj = list[i];
+                if (predicate(obj, i, list)) {
+                    return obj;
+                }
+            }
+        },
+        _delegate = function (el, ev, selector, cb) {
+            el.addEventListener(ev, function (el2) {
+                var match = _find(el.querySelectorAll(selector), _equal.bind(null, el2.target));
+                if (match) {
+                    return cb.apply(null, arguments);
+                }
+            });
+        },
         getTransactionFromForm = _flow(_transaction, _toObject, _inputData);
 
     $create.addEventListener('click', function () {
