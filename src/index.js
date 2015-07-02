@@ -89,14 +89,10 @@
                 payer: transactionRaw.payer.trim()
             }
         },
-        _contentDivider = function (str, list, index) {
-            return list.length - index === 1 ? '' : str;
-        },
-
-        _hrDivider = _contentDivider.bind(null, '</hr>'),
 
         _transactionToHtml = function (transaction, index, transactions) {
-            return ['<div>',
+            return [
+                '<div>',
                 '<span>#' + index + '</span>',
                 "<span class=\"lead\">" + transaction.payer + '</span>',
                 '<small class="text-muted">paid</small>',
@@ -104,14 +100,14 @@
                 '<small class="text-muted">for</small>',
                 '<span class="lead">' + transaction.payees.join(', ') + '</span>',
                 '</div>',
-                _hrDivider(transactions.length, index)].join('\n');
+                '<hr/>'].join('\n');
         },
         _userBalanceToHtml = function (balance, index, balances) {
             return ['<div>',
                 '<span class="lead" style="width: 50%; display: inline-block">' + balance.user + '</span>',
                 '<span class="lead">' + balance.amount + '</span>',
                 '</div>',
-                _hrDivider(balances.length, index)].join('\n');
+                '<hr/>'].join('\n');
         },
         _setInnerHtml = function (el, content) {
             el.innerHTML = content;
