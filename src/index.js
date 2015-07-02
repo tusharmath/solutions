@@ -203,7 +203,7 @@
             _setInnerHtml($netBalanceListView, _map(transactionBalance, _userBalanceToHtml).join('\n'));
         },
         _add = function (arr, item) {
-            arr.push(item);
+            arr.unshift(item);
         },
         _equal = function (val1, val2) {
             return val1 === val2;

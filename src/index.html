@@ -44,7 +44,9 @@
         <div>
             <input type="text" name="payees" placeholder="payees (csv)" value="{{obj.transaction.payees.join(', ')}}"/>
         </div>
-        <div><input type="text" name="description" placeholder="description"/></div>
+        <div>
+            <input type="text" name="description" placeholder="description" value="{{obj.transaction.description}}"/>
+        </div>
         <div><a href="javascript: void 0;" class="button button-primary" id="update">update</a>
         </div>
     </form>
