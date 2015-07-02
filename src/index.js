@@ -90,6 +90,9 @@
                 return str.trim();
             });
         },
+        _remove = function (list, index) {
+            list.splice(index, 1);
+        },
         _transaction = function (transactionRaw) {
             return {
                 payees: _tokenize(transactionRaw.payees),
@@ -108,8 +111,8 @@
                 '<small class="text-muted">for</small>',
                 '<span class="lead">' + transaction.payees.join(', ') + '</span>',
                 '<div>',
-                '<a href="javascript: void 0;" class="button button-warning" id="create">edit</a>',
-                '<a href="javascript: void 0;" class="button button-danger" id="create">delete</a>',
+                '<a href="javascript: void 0;" class="button button-warning edit-button" id="edit">edit</a>',
+                '<a href="javascript: void 0;" class="button button-danger delete-button" id="delete" index="' + index + '">delete</a>',
                 '</div>',
                 '</div>',
                 '<hr/>'].join('\n');
@@ -176,7 +179,15 @@
         _render();
     });
 
+    _delegate($transactionList, 'click', '.delete-button', function (ev) {
+        _remove(transactions, ev.target.attributes.index.value);
+        userBalance = {};
+        _map(transactions, _updateUserBalance.bind(null, userBalance));
+        _render();
+    });
+
     _addTransaction({payer: 'Ajay', amount: 300, payees: ['Ajay', 'Vijay', 'Peejay']});
+    _addTransaction({payer: 'Peejay', amount: 100, payees: ['Ajay', 'Vijay']});
     _render();
 
 })();
