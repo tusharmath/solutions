@@ -195,6 +195,7 @@
                 userBalance[person] = _calcPayeeBalance(transaction, userBalance[person]);
             });
             userBalance[transaction.payer] = _calcPayerBalance(transaction, userBalance[transaction.payer]);
+            return userBalance;
         },
         _render = function () {
             _setInnerHtml($transactionList, _map(transactions, _transactionToHtml).join('\n'));
@@ -207,6 +208,17 @@
         _equal = function (val1, val2) {
             return val1 === val2;
         },
+        _ary = function (func, count) {
+            return function () {
+                return func.apply(null, _toArray(arguments).slice(0, count));
+            }
+        },
+        _invoke = function () {
+            var args = _toArray(arguments),
+                func = _last(args),
+                appliedArgs = _initial(args);
+            return func.apply(null, appliedArgs);
+        },
         _delegate = function (el, ev, selector, cb) {
             el.addEventListener(ev, function (el2) {
                 var match = _find(el.querySelectorAll(selector), _equal.bind(null, el2.target));
@@ -216,6 +228,19 @@
             });
         },
         _getTransactionFromForm = _flow(_transaction, _toObject, _getFormData);
+
+    function Flux() {
+        var eventMap = {};
+        this.subscribe = function (ev, cb) {
+            eventMap[ev] = eventMap[ev] || [];
+            eventMap[ev].push(cb);
+        };
+        this.trigger = function (ev, val) {
+            _map(eventMap[ev], _ary(_invoke, 2).bind(null, val));
+        }
+    }
+
+    var f = new Flux();
 
     $create.addEventListener('click', function () {
         var transaction = _getTransactionFromForm($newTransaction, TRANSACTION_FIELDS);
