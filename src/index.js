@@ -107,8 +107,10 @@
                 '<span class="lead">' + transaction.amount + '</span>',
                 '<small class="text-muted">for</small>',
                 '<span class="lead">' + transaction.payees.join(', ') + '</span>',
-                '<a href="javascript: void 0;" class="button-edit" id="create">edit</a>',
-                '<a href="javascript: void 0;" class="button-delete" id="create">delete</a>',
+                '<div>',
+                '<a href="javascript: void 0;" class="button button-warning" id="create">edit</a>',
+                '<a href="javascript: void 0;" class="button button-danger" id="create">delete</a>',
+                '</div>',
                 '</div>',
                 '<hr/>'].join('\n');
         },
@@ -136,6 +138,14 @@
             });
             userBalance[transaction.payer] = _calcPayerBalance(transaction, userBalance[transaction.payer]);
         },
+        _render = function () {
+            _setInnerHtml($transactionList, _map(transactions, _transactionToHtml).join('\n'));
+            _setInnerHtml($netBalanceList, _map(userBalance, _userBalanceToHtml).join('\n'));
+        },
+        _addTransaction = function (transaction) {
+            transactions.push(transaction);
+            _updateUserBalance(userBalance, transaction);
+        },
         getTransactionFromForm = _flow(_transaction, _toObject, _inputData);
 
     $create.addEventListener('click', function () {
@@ -143,11 +153,11 @@
         if (!transaction.amount) {
             return;
         }
-        transactions.push(transaction);
-        _updateUserBalance(userBalance, transaction);
+        _addTransaction(transaction);
 
-        _setInnerHtml($transactionList, _map(transactions, _transactionToHtml).join('\n'));
-        _setInnerHtml($netBalanceList, _map(userBalance, _userBalanceToHtml).join('\n'));
     });
+
+    _addTransaction({payer: 'Ajay', amount: 300, payees: ['Ajay', 'Vijay', 'Peejay']});
+    _render();
 
 })();

@@ -11,14 +11,17 @@
 
     <form id="new-transaction">
         <span>#New</span>
-        <span class="lead"><input type="text" name="payer" placeholder="payer"/></span>
-        <small class="text-muted">paid</small>
-        <span class="lead"><input style="width:80px;" type="text" name="amount" placeholder="amount"/></span>
-        <small>for</small>
-        <span class="lead"><input type="text" name="payees" placeholder="payees (csv)"/></span>
-        <a href="javascript: void 0;" class="button button-primary" id="create">save</a>
+        <div><input type="text" name="payer" placeholder="payer"/></div>
+        <div><input style="width:80px;" type="text" name="amount" placeholder="amount"/></div>
+        <div>
+            <input type="text" name="payees" placeholder="payees (csv)"/>
+        </div>
+        <div>
+            <a href="javascript: void 0;" class="button button-primary" id="create">save</a>
+        </div>
+        <hr/>
     </form>
-    <hr/>
+
     <div id="transaction-list">
         <!-- Placeholder -->
     </div>

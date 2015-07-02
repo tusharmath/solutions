@@ -23,11 +23,12 @@ body, html {
     color: #FFF;
     box-shadow: 2px 4px 4px #aaa;
     cursor: pointer;
-    float: right;
     border: none;
     padding: 6px 18px;
     border-radius: 4px;
     text-transform: uppercase;
+    display: inline-block;
+    margin-top: 10px;
 }
 
 .button-danger {
@@ -68,8 +69,9 @@ input {
     border-bottom-style: dotted;
     font-size: 20px;
     margin-right: 10px;
+    margin-top: 10px;
     color: #88b;
-    width: 180px;
+    width: 100%;
 }
 
 input:focus {
