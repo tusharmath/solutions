@@ -10,6 +10,7 @@
         $transactionList = $('#transaction-list'),
         TRANSACTION_FIELDS = ['amount', 'payees', 'payer', 'description'],
         transactions = [],
+        userBalance = {},
         _map = function (list, cb, ctx) {
             var results = [];
             for (var i = 0; i < list.length; i++) {
@@ -86,12 +87,30 @@
                 '</div>',
                 transactions.length - index === 1 ? '' : '<hr/>'].join('\n');
         },
+        _setInnerHtml = function (el, content) {
+            el.innerHTML = content;
+        },
+        _calcPayerBalance = function (transaction, current) {
+            current = current || 0;
+            return current - transaction.amount;
+        },
+        _calcPayeeBalance = function (transaction, current) {
+            current = current || 0;
+            return current + transaction.amount / transaction.payees.length;
+        },
+
         getTransactionFromForm = _flow(_transaction, _toObject, _inputData);
 
     $create.addEventListener('click', function () {
         var transaction = getTransactionFromForm($newTransaction, TRANSACTION_FIELDS);
         transactions.push(transaction);
-        $transactionList.innerHTML = _map(transactions, _transactionToHtml).join('\n');
+        _setInnerHtml($transactionList, _map(transactions, _transactionToHtml));
+
+        _map(transaction.payees, function (person, i) {
+            userBalance[person] = _calcPayeeBalance(transaction, userBalance[person]);
+        });
+        userBalance[transaction.payer] = _calcPayerBalance(transaction, userBalance[transaction.payer]);
+        console.log(userBalance);
 
     });
 
