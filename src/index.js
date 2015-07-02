@@ -37,12 +37,19 @@
                 });
             }
         },
-        _inputData = function (el, keys) {
+        _getFormData = function (el, keys) {
             return _map(keys, function (key) {
                 var elements = el.elements;
                 return {
                     key: key,
                     value: elements[key] ? elements[key].value : null
+                }
+            });
+        },
+        _clearForm = function (el, keys) {
+            _map(keys, function (key) {
+                if (el.elements[key]) {
+                    el.elements[key].value = '';
                 }
             });
         },
@@ -168,7 +175,7 @@
                 }
             });
         },
-        getTransactionFromForm = _flow(_transaction, _toObject, _inputData);
+        getTransactionFromForm = _flow(_transaction, _toObject, _getFormData);
 
     $create.addEventListener('click', function () {
         var transaction = getTransactionFromForm($newTransaction, TRANSACTION_FIELDS);
@@ -177,6 +184,7 @@
         }
         _addTransaction(transaction);
         _render();
+        _clearForm($newTransaction, TRANSACTION_FIELDS);
     });
 
     _delegate($transactionList, 'click', '.delete-button', function (ev) {
@@ -188,6 +196,7 @@
 
     _addTransaction({payer: 'Ajay', amount: 300, payees: ['Ajay', 'Vijay', 'Peejay']});
     _addTransaction({payer: 'Peejay', amount: 100, payees: ['Ajay', 'Vijay']});
+    _clearForm($newTransaction, TRANSACTION_FIELDS);
     _render();
 
 })();
