@@ -229,19 +229,6 @@
         },
         _getTransactionFromForm = _flow(_transaction, _toObject, _getFormData);
 
-    function Flux() {
-        var eventMap = {};
-        this.subscribe = function (ev, cb) {
-            eventMap[ev] = eventMap[ev] || [];
-            eventMap[ev].push(cb);
-        };
-        this.trigger = function (ev, val) {
-            _map(eventMap[ev], _ary(_invoke, 2).bind(null, val));
-        }
-    }
-
-    var f = new Flux();
-
     $create.addEventListener('click', function () {
         var transaction = _getTransactionFromForm($newTransaction, TRANSACTION_FIELDS);
         if (!transaction.amount) {
