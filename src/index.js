@@ -112,15 +112,12 @@
             }
         },
         _transactionTemplate = _template('#transaction-html'),
+        _balanceTemplate = _template('#balance-html'),
         _transactionToHtml = function (transaction, index) {
             return _transactionTemplate({transaction, index});
         },
         _userBalanceToHtml = function (amount, user) {
-            return ['<div>',
-                '<span class="lead" style="width: 50%; display: inline-block">' + user + '</span>',
-                '<span class="lead">' + _numberRound(amount, 2) + '</span>',
-                '</div>',
-                '<hr/>'].join('\n');
+            return _balanceTemplate({amount, user, _numberRound});
         },
         _setInnerHtml = function (el, content) {
             el.innerHTML = content;

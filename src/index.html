@@ -52,6 +52,13 @@
     </div>
     <hr/>
 </template>
+<template id="balance-html">
+    <div>
+        <span class="lead" style="width: 50%; display: inline-block">{{obj.user}}</span>
+        <span class="lead">{{obj._numberRound(obj.amount, 2)}}</span>
+    </div>
+    <hr/>
+</template>
 <script src="index.js"></script>
 </body>
 </html>
