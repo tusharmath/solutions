@@ -11,13 +11,26 @@
         TRANSACTION_FIELDS = ['amount', 'payees', 'payer', 'description'],
         transactions = [],
         userBalance = {},
+        _isArray = function (item) {
+            return item instanceof  Array;
+        },
+        _keys = function (obj) {
+            return Object.keys(obj);
+        },
         _map = function (list, cb, ctx) {
+
             var results = [];
-            for (var i = 0; i < list.length; i++) {
-                var obj = list[i];
-                results.push(cb.call(ctx || null, obj, i, list));
+
+            if (_isArray(list)) {
+                for (var i = 0; i < list.length; i++) {
+                    results.push(cb.call(ctx || null, list[i], i, list));
+                }
+                return results;
+            } else {
+                return _map(_keys(list), function (key, i, keyList) {
+                    return cb.call(ctx || null, list[key], key, list);
+                });
             }
-            return results;
         },
         _inputData = function (el, keys) {
             return _map(keys, function (key) {
@@ -76,6 +89,12 @@
                 payer: transactionRaw.payer.trim()
             }
         },
+        _contentDivider = function (str, list, index) {
+            return list.length - index === 1 ? '' : str;
+        },
+
+        _hrDivider = _contentDivider.bind(null, '</hr>'),
+
         _transactionToHtml = function (transaction, index, transactions) {
             return ['<div>',
                 '<span>#' + index + '</span>',
@@ -85,7 +104,14 @@
                 '<small class="text-muted">for</small>',
                 '<span class="lead">' + transaction.payees.join(', ') + '</span>',
                 '</div>',
-                transactions.length - index === 1 ? '' : '<hr/>'].join('\n');
+                _hrDivider(transactions.length, index)].join('\n');
+        },
+        _userBalanceToHtml = function (balance, index, balances) {
+            return ['<div>',
+                '<span class="lead" style="width: 50%; display: inline-block">' + balance.user + '</span>',
+                '<span class="lead">' + balance.amount + '</span>',
+                '</div>',
+                _hrDivider(balances.length, index)].join('\n');
         },
         _setInnerHtml = function (el, content) {
             el.innerHTML = content;
