@@ -37,6 +37,10 @@
                 });
             }
         },
+        _template = function (selector) {
+            var str = $(selector).innerHTML.replace(/\n/g, '');
+            return eval('(function (obj){return \'' + str.replace(/\{\{/g, '\'+').replace(/}}/g, '+\'') + '\';})')
+        },
         _getFormData = function (el, keys) {
             return _map(keys, function (key) {
                 var elements = el.elements;
@@ -107,22 +111,9 @@
                 payer: transactionRaw.payer.trim()
             }
         },
-
+        _transactionTemplate = _template('#transaction-html'),
         _transactionToHtml = function (transaction, index) {
-            return [
-                '<div>',
-                '<span>#' + index + '</span>',
-                "<span class=\"lead\">" + transaction.payer + '</span>',
-                '<small class="text-muted">paid</small>',
-                '<span class="lead">' + transaction.amount + '</span>',
-                '<small class="text-muted">for</small>',
-                '<span class="lead">' + transaction.payees.join(', ') + '</span>',
-                '<div>',
-                '<a href="javascript: void 0;" class="button button-warning edit-button" id="edit">edit</a>',
-                '<a href="javascript: void 0;" class="button button-danger delete-button" id="delete" index="' + index + '">delete</a>',
-                '</div>',
-                '</div>',
-                '<hr/>'].join('\n');
+            return _transactionTemplate({transaction, index});
         },
         _userBalanceToHtml = function (amount, user) {
             return ['<div>',
@@ -194,9 +185,12 @@
         _render();
     });
 
-    _addTransaction({payer: 'Ajay', amount: 300, payees: ['Ajay', 'Vijay', 'Peejay']});
-    _addTransaction({payer: 'Peejay', amount: 100, payees: ['Ajay', 'Vijay']});
+    _map([
+        {payer: 'Ajay', amount: 300, payees: ['Ajay', 'Vijay', 'Peejay']},
+        {payer: 'Peejay', amount: 100, payees: ['Ajay', 'Vijay']}
+    ], _addTransaction);
     _clearForm($newTransaction, TRANSACTION_FIELDS);
     _render();
 
 })();
+
