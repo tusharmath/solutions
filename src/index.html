@@ -15,6 +15,7 @@
         <div><input type="text" name="payer" placeholder="payer"/></div>
         <div><input type="text" name="amount" placeholder="amount"/></div>
         <div><input type="text" name="payees" placeholder="payees (csv)"/></div>
+        <div><input type="text" name="description" placeholder="description"/></div>
         <div><a href="javascript: void 0;" class="button button-primary" id="create">save</a></div>
     </form>
 
@@ -43,22 +44,30 @@
         <div>
             <input type="text" name="payees" placeholder="payees (csv)" value="{{obj.transaction.payees.join(', ')}}"/>
         </div>
+        <div><input type="text" name="description" placeholder="description"/></div>
         <div><a href="javascript: void 0;" class="button button-primary" id="update">update</a>
         </div>
     </form>
 </template>
 <template id="transaction-html">
     <div class="tile">
-        <span class="lead">{{obj.transaction.payer}}</span>
-        <small class="text-muted">paid</small>
-        <span class="lead">{{obj.transaction.amount}}</span>
-        <small class="text-muted">for</small>
-        <span class="lead">{{obj.transaction.payees.join(', ')}}</span>
+        <div>
+            <span class="lead">{{obj.transaction.payer}}</span>
+            <small class="text-muted">paid</small>
+            <span class="lead">{{obj.transaction.amount}}</span>
+            <small class="text-muted">for</small>
+            <span class="lead">{{obj.transaction.payees.join(', ')}}</span>
+
+        </div>
+        <div>
+            <small class="text-muted">~ {{obj.transaction.description}}</small>
+        </div>
 
         <div>
             <a href="javascript: void 0;" index="{{obj.index}}" class="button button-warning edit-button"
                id="edit">edit</a>
-            <a href="javascript: void 0;" index="{{obj.index}}" class="button button-danger delete-button" id="delete">delete</a>
+            <a href="javascript: void 0;" index="{{obj.index}}" class="button button-danger delete-button"
+               id="delete">delete</a>
         </div>
     </div>
 </template>

@@ -9,10 +9,9 @@
         $ = document.querySelector.bind(document),
         $newTransaction = $('#new-transaction'),
         $create = $('#create'),
-        $transactionList = $('#transaction-list'),
-        $netBalanceList = $('#net-balance-list'),
+        $transactionListView = $('#transaction-list'),
+        $netBalanceListView = $('#net-balance-list'),
         transactions = [],
-        transactionBalance = {},
         _isArray = function (item) {
             return item instanceof  Array;
         },
@@ -157,7 +156,8 @@
             return {
                 payees: _map(_toArray(transactionRaw.payees), _trim),
                 amount: Number(transactionRaw.amount),
-                payer: _trim(transactionRaw.payer)
+                payer: _trim(transactionRaw.payer),
+                description: _trim(transactionRaw.description || '')
             }
         },
         _transactionTemplate = _template('#transaction-html'),
@@ -191,8 +191,9 @@
             return _reduce(transactions, _reducer, {});
         },
         _render = function () {
-            _setInnerHtml($transactionList, _map(transactions, _transactionToHtml).join('\n'));
-            _setInnerHtml($netBalanceList, _map(transactionBalance, _userBalanceToHtml).join('\n'));
+            var transactionBalance = _calcTransactionBalance(transactions);
+            _setInnerHtml($transactionListView, _map(transactions, _transactionToHtml).join('\n'));
+            _setInnerHtml($netBalanceListView, _map(transactionBalance, _userBalanceToHtml).join('\n'));
         },
         _add = function (arr, item) {
             arr.push(item);
@@ -208,6 +209,7 @@
                 }
             });
         },
+        _delegateTransactionViewClick = _delegate.bind(null, $transactionListView, 'click'),
         _getTransactionForm = _flow(_transaction, _toObject, _getFormData),
         _getNewTransactionForm = _getTransactionForm.bind(null, $newTransaction, TRANSACTION_FIELDS),
         _addTransaction = _add.bind(null, transactions);
@@ -218,33 +220,30 @@
             return;
         }
         _addTransaction(transaction);
-        transactionBalance = _calcTransactionBalance(transactions);
         _render();
         _clearForm($newTransaction, TRANSACTION_FIELDS);
     });
 
-    _delegate($transactionList, 'click', '.delete-button', function (ev) {
+    _delegateTransactionViewClick('.delete-button', function (ev) {
         _remove(transactions, _get(ev, INDEX_ATTRIBUTE_FIELD_NAME));
-        transactionBalance = _calcTransactionBalance(transactions);
         _render();
     });
 
-    _delegate($transactionList, 'click', '.edit-button', function (ev) {
+    _delegateTransactionViewClick('.edit-button', function (ev) {
         var i = parseInt(_get(ev, INDEX_ATTRIBUTE_FIELD_NAME), 10);
         var transaction = transactions[i];
         _remove(transactions, i);
-        _setInnerHtml($transactionList, _editTransactionTemplate({transaction, i}));
+        _setInnerHtml($transactionListView, _editTransactionTemplate({transaction, i}));
     });
 
-    _delegate($transactionList, 'click', '#update', function () {
+    _delegateTransactionViewClick('#update', function () {
         var transaction = _getTransactionForm($('#edit-transaction'), ['index'].concat(TRANSACTION_FIELDS));
         _addTransaction(transaction);
-        transactionBalance  = _calcTransactionBalance(transactions);
         _render();
     });
     _map([
-        {payer: 'Ajay', amount: 300, payees: ['Ajay', 'Vijay', 'Peejay']},
-        {payer: 'Peejay', amount: 100, payees: ['Ajay', 'Vijay']}
+        {payer: 'Ajay', amount: 300, payees: ['Ajay', 'Vijay', 'Peejay'], description: 'food and snacks'},
+        {payer: 'Peejay', amount: 100, payees: ['Ajay', 'Vijay'], description: 'tuition fee'}
     ], _addTransaction);
 
     _map(transactions, _calcTransactionBalance.bind(null, {}));
