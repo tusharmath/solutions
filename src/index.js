@@ -64,6 +64,15 @@
             });
             return satisfied === list.length;
         },
+        _set = function (obj, keyListStr, val) {
+            var property = obj, keyList = keyListStr.split('.');
+            if (keyList.length > 1) {
+                property = _get(obj, _initial(keyList).join('.'));
+            }
+            if (property) {
+                property[_last(keyList)] = val
+            }
+        },
         _get = function (obj, keyListStr) {
             var temp = obj, keyList = keyListStr.split('.');
             for (var i = 0; i < keyList.length; i++) {
@@ -80,11 +89,14 @@
             var str = $(selector).innerHTML.replace(/\n/g, '');
             return eval('(function (obj){return \'' + str.replace(/\{\{/g, '\'+').replace(/}}/g, '+\'') + '\';})')
         },
-        _getFormElement = function (el, key) {
-            _get(el, 'elements.' + key);
+        _getFormPropertyValueKey = function (field) {
+            return _getFormPropertyKey(field) + '.value';
+        },
+        _getFormPropertyKey = function (field) {
+            return 'elements.' + field;
         },
         _getFormValue = function (el, key) {
-            return _get(el, 'elements.' + key + '.value');
+            return _get(el, _getFormPropertyValueKey(key));
         },
         toKeyValue = function (getter, key) {
             return {
@@ -95,13 +107,11 @@
         _getFormData = function (el, keys) {
             return _map(keys, toKeyValue.bind(null, _getFormValue.bind(null, el)));
         },
-        _clearForm = function (el, keys) {
-            var cb = function (key) {
-                if (el.elements[key]) {
-                    el.elements[key].value = '';
-                }
-            };
-            _map(keys, cb);
+        _clearFormField = function (el, field) {
+            _set(el, _getFormPropertyValueKey(field), '');
+        },
+        _clearForm = function (el, fields) {
+            _map(fields, _clearFormField.bind(null, el));
         },
         _toObject = function (arr) {
             var obj = {};
@@ -113,11 +123,20 @@
         _identity = function (x) {
             return x;
         },
-        _keyValue = function (value, key) {
-            return {value, key};
+        _isString = function (str) {
+            return typeof str === 'string';
         },
         _toArray = function (item) {
+            if (_isString(item)) {
+                return item.split(',');
+            }
             return _map(item, _identity);
+        },
+        _initial = function (list) {
+            return list.slice(0, -1)
+        },
+        _last = function (arr) {
+            return arr[arr.length - 1];
         },
         _head = function (list) {
             return list [0];
@@ -125,7 +144,6 @@
         _body = function (arr) {
             return arr.slice(1);
         },
-
         _flow = function () {
             var funcList = _toArray(arguments).reverse(),
                 funcHead = _head(funcList),
@@ -139,36 +157,30 @@
                 return temp;
             };
         },
-        _tokenize = function (str) {
-            if (!str || str.length <= 0) {
-                return [];
-            }
-            return _map(str.split(','), function (str) {
-                return str.trim();
-            });
+        _trim = function (str) {
+            return str.trim();
         },
         _remove = function (list, index) {
             list.splice(index, 1);
         },
         _transaction = function (transactionRaw) {
             return {
-                payees: _tokenize(transactionRaw.payees),
-                amount: parseInt(transactionRaw.amount, 10),
-                payer: transactionRaw.payer.trim()
+                payees: _map(_toArray(transactionRaw.payees), _trim),
+                amount: Number(transactionRaw.amount),
+                payer: _trim(transactionRaw.payer)
             }
         },
         _transactionTemplate = _template('#transaction-html'),
         _balanceTemplate = _template('#balance-html'),
         _editTransactionTemplate = _template('#edit-transaction-html'),
         _transactionToHtml = function (transaction, index) {
-
             return _transactionTemplate({transaction, index});
         },
         _userBalanceToHtml = function (amount, user) {
             return _balanceTemplate({amount, user, _numberRound});
         },
         _setInnerHtml = function (el, content) {
-            el.innerHTML = content;
+            _set(el, 'innerHTML', content);
         },
         _calcPayerBalance = function (transaction, current) {
             current = current || 0;
