@@ -18,7 +18,10 @@
         <div><input type="text" name="description" placeholder="description"/></div>
         <div><a href="javascript: void 0;" class="button button-primary" id="create">save</a></div>
     </form>
-
+    <form id="search-transaction" class="tile">
+        <h2>Search</h2>
+        <div><input type="text" name="query" placeholder="omni search"/></div>
+    </form>
     <div id="transaction-list">
         <!-- Placeholder -->
     </div>
@@ -76,7 +79,7 @@
 <template id="balance-html">
     <div class="tile">
         <span class="lead" style="width: 50%; display: inline-block">{{obj.user}}</span>
-        <span class="lead">{{obj._numberRound(obj.amount, 2)}}</span>
+        <span class="lead">{{obj._numberRound(obj.amount, 2)}} $</span>
     </div>
 </template>
 <script src="index.js"></script>

@@ -8,6 +8,7 @@
         TRANSACTION_FIELDS = ['amount', 'payees', 'payer', 'description'],
         $ = document.querySelector.bind(document),
         $newTransaction = $('#new-transaction'),
+        $searchTransaction = $('#search-transaction'),
         $create = $('#create'),
         $transactionListView = $('#transaction-list'),
         $netBalanceListView = $('#net-balance-list'),
@@ -197,10 +198,34 @@
             };
             return _reduce(transactions, _reducer, {});
         },
+        _filter = function (arr, predicate) {
+            var results = [];
+            _map(arr, function (val) {
+                var predicateValue = predicate.apply(null, arguments);
+                if (predicateValue) {
+                    results.push(val);
+                }
+            });
+            return results;
+        },
+        _serialize = function (obj, keys) {
+            var str = '';
+            _map(keys, function (key) {
+                str += obj[key].toString();
+            });
+            return str;
+        },
+        _transactionFuzzyMatch = function (searchStr, transaction) {
+            var str = _serialize(transaction, ['payer', 'payees', 'description']);
+            return searchStr ? str.indexOf(searchStr) > -1 : true;
+        },
+        _filteredTransactions = function () {
+            var search = _toObject(_getFormData($searchTransaction, ['query']));
+            return _filter(transactions, _transactionFuzzyMatch.bind(null, search.query));
+        },
         _render = function () {
-            var transactionBalance = _calcTransactionBalance(transactions);
-            _setInnerHtml($transactionListView, _map(transactions, _transactionToHtml).join('\n'));
-            _setInnerHtml($netBalanceListView, _map(transactionBalance, _userBalanceToHtml).join('\n'));
+            _setInnerHtml($transactionListView, _map(_filteredTransactions(), _transactionToHtml).join('\n'));
+            _setInnerHtml($netBalanceListView, _map(_calcTransactionBalance(transactions), _userBalanceToHtml).join('\n'));
         },
         _add = function (arr, item) {
             arr.unshift(item);
@@ -227,7 +252,7 @@
             _remove(transactions, i);
             _commitTransactions(transactions);
         };
-
+    $searchTransaction.addEventListener('keyup', _render);
     $create.addEventListener('click', function () {
         var transaction = _getNewTransactionForm();
         if (!transaction.amount) {
