@@ -6,13 +6,15 @@
 
     var $ = document.querySelector.bind(document),
         $newTransaction = $('#new-transaction'),
+        $create = $('#create'),
+        $transactionList = $('#transaction-list'),
         TRANSACTION_FIELDS = ['amount', 'payees', 'payer', 'description'],
         transactions = [],
         _map = function (list, cb, ctx) {
             var results = [];
             for (var i = 0; i < list.length; i++) {
                 var obj = list[i];
-                results.push(cb.call(ctx || null, obj, i));
+                results.push(cb.call(ctx || null, obj, i, list));
             }
             return results;
         },
@@ -73,12 +75,24 @@
                 payer: transactionRaw.payer.trim()
             }
         },
+        _transactionToHtml = function (transaction, index, transactions) {
+            return ['<div>',
+                '<span>#' + index + '</span>',
+                "<span class=\"lead\">" + transaction.payer + '</span>',
+                '<small class="text-muted">paid</small>',
+                '<span class="lead">' + transaction.amount + '</span>',
+                '<small class="text-muted">for</small>',
+                '<span class="lead">' + transaction.payees.join(', ') + '</span>',
+                '</div>',
+                transactions.length - index === 1 ? '' : '<hr/>'].join('\n');
+        },
         getTransactionFromForm = _flow(_transaction, _toObject, _inputData);
 
-    $('#create').addEventListener('click', function () {
-
+    $create.addEventListener('click', function () {
         var transaction = getTransactionFromForm($newTransaction, TRANSACTION_FIELDS);
         transactions.push(transaction);
+        $transactionList.innerHTML = _map(transactions, _transactionToHtml).join('\n');
+
     });
 
 })();
