@@ -107,6 +107,8 @@
                 '<span class="lead">' + transaction.amount + '</span>',
                 '<small class="text-muted">for</small>',
                 '<span class="lead">' + transaction.payees.join(', ') + '</span>',
+                '<a href="javascript: void 0;" class="button-edit" id="create">edit</a>',
+                '<a href="javascript: void 0;" class="button-delete" id="create">delete</a>',
                 '</div>',
                 '<hr/>'].join('\n');
         },
@@ -138,6 +140,9 @@
 
     $create.addEventListener('click', function () {
         var transaction = getTransactionFromForm($newTransaction, TRANSACTION_FIELDS);
+        if (!transaction.amount) {
+            return;
+        }
         transactions.push(transaction);
         _updateUserBalance(userBalance, transaction);
 

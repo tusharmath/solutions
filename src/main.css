@@ -18,17 +18,28 @@ body, html {
     box-shadow: 4px 4px 4px #ccc;
 }
 
-.button-add {
-    background-color: #E00;
+.button {
     text-align: center;
     color: #FFF;
-    box-shadow: 4px 4px 4px #aaa;
+    box-shadow: 2px 4px 4px #aaa;
     cursor: pointer;
     float: right;
-    border: 1px solid #F00;
+    border: none;
     padding: 6px 18px;
     border-radius: 4px;
     text-transform: uppercase;
+}
+
+.button-danger {
+    background-color: #E00;
+}
+
+.button-warning {
+    background-color: #0E0;
+}
+
+.button-primary {
+    background-color: #55E;
 }
 
 .text-muted {
