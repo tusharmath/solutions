@@ -78,3 +78,14 @@ input {
 input:focus {
     outline: none;
 }
+.tile{
+    padding: 10px 0px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+.tile:last-child{
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}

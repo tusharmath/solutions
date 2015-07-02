@@ -9,14 +9,13 @@
 <div class="container">
     <h1>Transactions</h1>
 
-    <form id="new-transaction">
+    <form id="new-transaction" class="tile">
         <span>#New</span>
 
         <div><input type="text" name="payer" placeholder="payer"/></div>
         <div><input type="text" name="amount" placeholder="amount"/></div>
         <div><input type="text" name="payees" placeholder="payees (csv)"/></div>
         <div><a href="javascript: void 0;" class="button button-primary" id="create">save</a></div>
-        <hr/>
     </form>
 
     <div id="transaction-list">
@@ -25,19 +24,18 @@
 </div>
 
 <div class="container">
-    <h1>Net Balance</h1>
-
     <div>
-        <span style="width: 50%;display: inline-block">User</span>
-        <span>Balance</span>
-        <hr/>
+        <h1>
+            <span style="width: 50%;display: inline-block">User</span>
+            <span>Balance</span>
+        </h1>
     </div>
     <div id="net-balance-list">
         <!-- Placeholder -->
     </div>
 </div>
 <template id="edit-transaction-html">
-    <form id="edit-transaction">
+    <form id="edit-transaction" class="tile">
         <span>#Edit</span>
 
         <div><input type="text" name="payer" placeholder="payer" value="{{obj.transaction.payer}}"/></div>
@@ -47,12 +45,10 @@
         </div>
         <div><a href="javascript: void 0;" class="button button-primary" id="update">update</a>
         </div>
-        <hr/>
     </form>
 </template>
 <template id="transaction-html">
-    <div>
-        <span>{{obj.index}}</span>
+    <div class="tile">
         <span class="lead">{{obj.transaction.payer}}</span>
         <small class="text-muted">paid</small>
         <span class="lead">{{obj.transaction.amount}}</span>
@@ -65,14 +61,12 @@
             <a href="javascript: void 0;" index="{{obj.index}}" class="button button-danger delete-button" id="delete">delete</a>
         </div>
     </div>
-    <hr/>
 </template>
 <template id="balance-html">
-    <div>
+    <div class="tile">
         <span class="lead" style="width: 50%; display: inline-block">{{obj.user}}</span>
         <span class="lead">{{obj._numberRound(obj.amount, 2)}}</span>
     </div>
-    <hr/>
 </template>
 <script src="index.js"></script>
 </body>

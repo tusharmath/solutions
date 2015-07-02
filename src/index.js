@@ -115,6 +115,7 @@
         _balanceTemplate = _template('#balance-html'),
         _editTransactionTemplate = _template('#edit-transaction-html'),
         _transactionToHtml = function (transaction, index) {
+
             return _transactionTemplate({transaction, index});
         },
         _userBalanceToHtml = function (amount, user) {
@@ -184,8 +185,7 @@
     });
 
     _delegate($transactionList, 'click', '.edit-button', function (ev) {
-        var index = ev.target.attributes.index.value;
-
+        var index = parseInt(ev.target.attributes.index.value, 0);
         var transaction = transactions[index];
         _remove(transactions, index);
         _setInnerHtml($transactionList, _editTransactionTemplate({transaction, index}));
