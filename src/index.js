@@ -4,14 +4,15 @@
 (function () {
     "use strict";
 
-    var TRANSACTION_FIELDS = ['amount', 'payees', 'payer', 'description'],
+    var INDEX_ATTRIBUTE_FIELD_NAME = 'target.attributes.index.value',
+        TRANSACTION_FIELDS = ['amount', 'payees', 'payer', 'description'],
         $ = document.querySelector.bind(document),
         $newTransaction = $('#new-transaction'),
         $create = $('#create'),
         $transactionList = $('#transaction-list'),
         $netBalanceList = $('#net-balance-list'),
         transactions = [],
-        userBalance = {},
+        transactionBalance = {},
         _isArray = function (item) {
             return item instanceof  Array;
         },
@@ -24,6 +25,13 @@
         _numberRound = function (number, decimal) {
             var power10 = _power(10, decimal);
             return Math.round(number * power10) / power10;
+        },
+        _reduce = function (arr, cb, memo) {
+            var result = memo;
+            _map(arr, function (val, key, list) {
+                result = cb(result, val, key, list);
+            });
+            return result;
         },
         _map = function (list, cb, ctx) {
             var results = [];
@@ -45,24 +53,6 @@
                     return obj;
                 }
             }
-        },
-        _filter = function (list, predicate) {
-            var results = [];
-            _map(list, function (obj, i, list) {
-                if (predicate(obj, i, list)) {
-                    results.push(obj);
-                }
-            });
-            return results;
-        },
-        _all = function (list, predicate) {
-            var satisfied = 0;
-            _map(list, function () {
-                if (predicate.apply(arguments)) {
-                    satisfied++;
-                }
-            });
-            return satisfied === list.length;
         },
         _set = function (obj, keyListStr, val) {
             var property = obj, keyList = keyListStr.split('.');
@@ -190,34 +180,25 @@
             current = current || 0;
             return current + transaction.amount / transaction.payees.length;
         },
-        _updateUserBalance = function (userBalance, transaction) {
-            _map(transaction.payees, function (person) {
-                userBalance[person] = _calcPayeeBalance(transaction, userBalance[person]);
-            });
-            userBalance[transaction.payer] = _calcPayerBalance(transaction, userBalance[transaction.payer]);
-            return userBalance;
+        _calcTransactionBalance = function (transactions) {
+            var _reducer = function (userBalance, transaction) {
+                _map(transaction.payees, function (person) {
+                    userBalance[person] = _calcPayeeBalance(transaction, userBalance[person]);
+                });
+                userBalance[transaction.payer] = _calcPayerBalance(transaction, userBalance[transaction.payer]);
+                return userBalance;
+            };
+            return _reduce(transactions, _reducer, {});
         },
         _render = function () {
             _setInnerHtml($transactionList, _map(transactions, _transactionToHtml).join('\n'));
-            _setInnerHtml($netBalanceList, _map(userBalance, _userBalanceToHtml).join('\n'));
+            _setInnerHtml($netBalanceList, _map(transactionBalance, _userBalanceToHtml).join('\n'));
         },
-        _addTransaction = function (transaction) {
-            transactions.push(transaction);
-            _updateUserBalance(userBalance, transaction);
+        _add = function (arr, item) {
+            arr.push(item);
         },
         _equal = function (val1, val2) {
             return val1 === val2;
-        },
-        _ary = function (func, count) {
-            return function () {
-                return func.apply(null, _toArray(arguments).slice(0, count));
-            }
-        },
-        _invoke = function () {
-            var args = _toArray(arguments),
-                func = _last(args),
-                appliedArgs = _initial(args);
-            return func.apply(null, appliedArgs);
         },
         _delegate = function (el, ev, selector, cb) {
             el.addEventListener(ev, function (el2) {
@@ -227,43 +208,46 @@
                 }
             });
         },
-        _getTransactionFromForm = _flow(_transaction, _toObject, _getFormData);
+        _getTransactionForm = _flow(_transaction, _toObject, _getFormData),
+        _getNewTransactionForm = _getTransactionForm.bind(null, $newTransaction, TRANSACTION_FIELDS),
+        _addTransaction = _add.bind(null, transactions);
 
     $create.addEventListener('click', function () {
-        var transaction = _getTransactionFromForm($newTransaction, TRANSACTION_FIELDS);
+        var transaction = _getNewTransactionForm();
         if (!transaction.amount) {
             return;
         }
         _addTransaction(transaction);
+        transactionBalance = _calcTransactionBalance(transactions);
         _render();
         _clearForm($newTransaction, TRANSACTION_FIELDS);
     });
 
     _delegate($transactionList, 'click', '.delete-button', function (ev) {
-        _remove(transactions, ev.target.attributes.index.value);
-        userBalance = {};
-        _map(transactions, _updateUserBalance.bind(null, userBalance));
+        _remove(transactions, _get(ev, INDEX_ATTRIBUTE_FIELD_NAME));
+        transactionBalance = _calcTransactionBalance(transactions);
         _render();
     });
 
     _delegate($transactionList, 'click', '.edit-button', function (ev) {
-        var index = parseInt(ev.target.attributes.index.value, 0);
-        var transaction = transactions[index];
-        _remove(transactions, index);
-        _setInnerHtml($transactionList, _editTransactionTemplate({transaction, index}));
+        var i = parseInt(_get(ev, INDEX_ATTRIBUTE_FIELD_NAME), 10);
+        var transaction = transactions[i];
+        _remove(transactions, i);
+        _setInnerHtml($transactionList, _editTransactionTemplate({transaction, i}));
     });
 
     _delegate($transactionList, 'click', '#update', function () {
-        var transaction = _getTransactionFromForm($('#edit-transaction'), ['index'].concat(TRANSACTION_FIELDS));
+        var transaction = _getTransactionForm($('#edit-transaction'), ['index'].concat(TRANSACTION_FIELDS));
         _addTransaction(transaction);
-        userBalance = {};
-        _map(transactions, _updateUserBalance.bind(null, userBalance));
+        transactionBalance  = _calcTransactionBalance(transactions);
         _render();
     });
     _map([
         {payer: 'Ajay', amount: 300, payees: ['Ajay', 'Vijay', 'Peejay']},
         {payer: 'Peejay', amount: 100, payees: ['Ajay', 'Vijay']}
     ], _addTransaction);
+
+    _map(transactions, _calcTransactionBalance.bind(null, {}));
     _clearForm($newTransaction, TRANSACTION_FIELDS);
     _render();
 
