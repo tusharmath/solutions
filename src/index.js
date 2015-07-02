@@ -215,10 +215,10 @@
                 }
             });
         },
-        getTransactionFromForm = _flow(_transaction, _toObject, _getFormData);
+        _getTransactionFromForm = _flow(_transaction, _toObject, _getFormData);
 
     $create.addEventListener('click', function () {
-        var transaction = getTransactionFromForm($newTransaction, TRANSACTION_FIELDS);
+        var transaction = _getTransactionFromForm($newTransaction, TRANSACTION_FIELDS);
         if (!transaction.amount) {
             return;
         }
@@ -242,7 +242,7 @@
     });
 
     _delegate($transactionList, 'click', '#update', function () {
-        var transaction = getTransactionFromForm($('#edit-transaction'), ['index'].concat(TRANSACTION_FIELDS));
+        var transaction = _getTransactionFromForm($('#edit-transaction'), ['index'].concat(TRANSACTION_FIELDS));
         _addTransaction(transaction);
         userBalance = {};
         _map(transactions, _updateUserBalance.bind(null, userBalance));
