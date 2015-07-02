@@ -154,7 +154,7 @@
             return;
         }
         _addTransaction(transaction);
-
+        _render();
     });
 
     _addTransaction({payer: 'Ajay', amount: 300, payees: ['Ajay', 'Vijay', 'Peejay']});
