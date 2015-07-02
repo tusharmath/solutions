@@ -38,11 +38,8 @@
         _toArray = function (item) {
             return _map(item, _identity);
         },
-        _first = function (list) {
+        _head = function (list) {
             return list [0];
-        },
-        _head = function (arr) {
-            return _first(arr.slice(0, 1));
         },
         _body = function (arr) {
             return arr.slice(1);
@@ -81,7 +78,7 @@
     $('#create').addEventListener('click', function () {
 
         var transaction = getTransactionFromForm($newTransaction, TRANSACTION_FIELDS);
-        console.log(transaction);
+        transactions.push(transaction);
     });
 
 })();
