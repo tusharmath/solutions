@@ -18,14 +18,15 @@
         _keys = function (obj) {
             return Object.keys(obj);
         },
+        _power = function (num, pow) {
+            return Math.pow(num, pow);
+        },
         _numberRound = function (number, decimal) {
-            var power10 = Math.pow(10, decimal);
+            var power10 = _power(10, decimal);
             return Math.round(number * power10) / power10;
         },
         _map = function (list, cb, ctx) {
-
             var results = [];
-
             if (_isArray(list)) {
                 for (var i = 0; i < list.length; i++) {
                     results.push(cb.call(ctx || null, list[i], i, list));
@@ -37,25 +38,70 @@
                 });
             }
         },
+        _find = function (list, predicate) {
+            for (var i = 0; i < list.length; i++) {
+                var obj = list[i];
+                if (predicate(obj, i, list)) {
+                    return obj;
+                }
+            }
+        },
+        _filter = function (list, predicate) {
+            var results = [];
+            _map(list, function (obj, i, list) {
+                if (predicate(obj, i, list)) {
+                    results.push(obj);
+                }
+            });
+            return results;
+        },
+        _all = function (list, predicate) {
+            var satisfied = 0;
+            _map(list, function () {
+                if (predicate.apply(arguments)) {
+                    satisfied++;
+                }
+            });
+            return satisfied === list.length;
+        },
+        _get = function (obj, keyListStr) {
+            var temp = obj, keyList = keyListStr.split('.');
+            for (var i = 0; i < keyList.length; i++) {
+                var key = keyList[i];
+                if (temp[key]) {
+                    temp = temp[key];
+                } else {
+                    return;
+                }
+            }
+            return temp;
+        },
         _template = function (selector) {
             var str = $(selector).innerHTML.replace(/\n/g, '');
             return eval('(function (obj){return \'' + str.replace(/\{\{/g, '\'+').replace(/}}/g, '+\'') + '\';})')
         },
+        _getFormElement = function (el, key) {
+            _get(el, 'elements.' + key);
+        },
+        _getFormValue = function (el, key) {
+            return _get(el, 'elements.' + key + '.value');
+        },
+        toKeyValue = function (getter, key) {
+            return {
+                key: key,
+                value: getter(key)
+            }
+        },
         _getFormData = function (el, keys) {
-            return _map(keys, function (key) {
-                var elements = el.elements;
-                return {
-                    key: key,
-                    value: elements[key] ? elements[key].value : null
-                }
-            });
+            return _map(keys, toKeyValue.bind(null, _getFormValue.bind(null, el)));
         },
         _clearForm = function (el, keys) {
-            _map(keys, function (key) {
+            var cb = function (key) {
                 if (el.elements[key]) {
                     el.elements[key].value = '';
                 }
-            });
+            };
+            _map(keys, cb);
         },
         _toObject = function (arr) {
             var obj = {};
@@ -148,14 +194,6 @@
         },
         _equal = function (val1, val2) {
             return val1 === val2;
-        },
-        _find = function (list, predicate) {
-            for (var i = 0; i < list.length; i++) {
-                var obj = list[i];
-                if (predicate(obj, i, list)) {
-                    return obj;
-                }
-            }
         },
         _delegate = function (el, ev, selector, cb) {
             el.addEventListener(ev, function (el2) {
