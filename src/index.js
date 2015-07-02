@@ -4,11 +4,12 @@
 (function () {
     "use strict";
 
-    var $ = document.querySelector.bind(document),
+    var TRANSACTION_FIELDS = ['amount', 'payees', 'payer', 'description'],
+        $ = document.querySelector.bind(document),
         $newTransaction = $('#new-transaction'),
         $create = $('#create'),
         $transactionList = $('#transaction-list'),
-        TRANSACTION_FIELDS = ['amount', 'payees', 'payer', 'description'],
+        $netBalanceList = $('#net-balance-list'),
         transactions = [],
         userBalance = {},
         _isArray = function (item) {
@@ -16,6 +17,10 @@
         },
         _keys = function (obj) {
             return Object.keys(obj);
+        },
+        _numberRound = function (number, decimal) {
+            var power10 = Math.pow(10, decimal);
+            return Math.round(number * power10) / power10;
         },
         _map = function (list, cb, ctx) {
 
@@ -50,6 +55,9 @@
         },
         _identity = function (x) {
             return x;
+        },
+        _keyValue = function (value, key) {
+            return {value, key};
         },
         _toArray = function (item) {
             return _map(item, _identity);
@@ -90,7 +98,7 @@
             }
         },
 
-        _transactionToHtml = function (transaction, index, transactions) {
+        _transactionToHtml = function (transaction, index) {
             return [
                 '<div>',
                 '<span>#' + index + '</span>',
@@ -102,10 +110,10 @@
                 '</div>',
                 '<hr/>'].join('\n');
         },
-        _userBalanceToHtml = function (balance, index, balances) {
+        _userBalanceToHtml = function (amount, user) {
             return ['<div>',
-                '<span class="lead" style="width: 50%; display: inline-block">' + balance.user + '</span>',
-                '<span class="lead">' + balance.amount + '</span>',
+                '<span class="lead" style="width: 50%; display: inline-block">' + user + '</span>',
+                '<span class="lead">' + _numberRound(amount, 2) + '</span>',
                 '</div>',
                 '<hr/>'].join('\n');
         },
@@ -120,20 +128,21 @@
             current = current || 0;
             return current + transaction.amount / transaction.payees.length;
         },
-
+        _updateUserBalance = function (userBalance, transaction) {
+            _map(transaction.payees, function (person) {
+                userBalance[person] = _calcPayeeBalance(transaction, userBalance[person]);
+            });
+            userBalance[transaction.payer] = _calcPayerBalance(transaction, userBalance[transaction.payer]);
+        },
         getTransactionFromForm = _flow(_transaction, _toObject, _inputData);
 
     $create.addEventListener('click', function () {
         var transaction = getTransactionFromForm($newTransaction, TRANSACTION_FIELDS);
         transactions.push(transaction);
-        _setInnerHtml($transactionList, _map(transactions, _transactionToHtml));
+        _updateUserBalance(userBalance, transaction);
 
-        _map(transaction.payees, function (person, i) {
-            userBalance[person] = _calcPayeeBalance(transaction, userBalance[person]);
-        });
-        userBalance[transaction.payer] = _calcPayerBalance(transaction, userBalance[transaction.payer]);
-        console.log(userBalance);
-
+        _setInnerHtml($transactionList, _map(transactions, _transactionToHtml).join('\n'));
+        _setInnerHtml($netBalanceList, _map(userBalance, _userBalanceToHtml).join('\n'));
     });
 
 })();
