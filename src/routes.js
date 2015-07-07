@@ -4,14 +4,11 @@
 "use strict";
 var router = require('koa-router'),
     baseRouter = router(),
-    v1 = router(),
+    v1 = require('./v1'),
     middleware = require('./middleware');
 
-v1.get('/contacts', function *() {
-    this.body = {data: [1, 2, 3, 34]};
-});
 baseRouter.get('/', middleware.renderIndex);
 baseRouter.get('/views/:page', middleware.render);
-baseRouter.use('/api/v1', v1.routes());
+baseRouter.use('/api/v1', v1);
 
 module.exports = baseRouter.routes();
