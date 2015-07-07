@@ -15,8 +15,9 @@ exports.contacts = {
         this.body = yield Contact.find(this.query);
     },
     update: function * (source) {
-        var contacts = _.first(yield Contact.find({_id: this.params.id}));
-        _.assign(contacts.attributes, _.get(this, source));
+        var newContact = _.get(this, source);
+        var contacts = _.first(yield Contact.find({_id: newContact._id}));
+        _.assign(contacts.attributes, newContact);
         this.body = yield new Contact(contacts.attributes).save();
     },
     remove: function * () {

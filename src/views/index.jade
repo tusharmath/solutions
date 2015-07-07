@@ -18,7 +18,7 @@ html(lang='en')
                         .col-sm-6
                             button.btn.pull-right.btn-warning.btn-sm(ng-click="edit=true" ng-hide="edit || create") Edit
                             button.btn.pull-right.btn-primary.btn-sm(ng-click="edit=true; save()" ng-show="create") Save
-                            button.btn.pull-right.btn-primary.btn-sm(ng-click="edit=true" ng-show="edit") Update
+                            button.btn.pull-right.btn-primary.btn-sm(ng-click="edit=true; update()" ng-show="edit") Update
                             button.btn.pull-right.btn-warning.btn-sm(ng-click="edit=false; create=false" ng-show="edit || create") Cancel
                 .panel-body
                     .row
@@ -27,4 +27,5 @@ html(lang='en')
                         .col-sm-6
                             contact-details(ng-hide="edit || create")
                             contact-create(ng-show="create")
+                            contact-edit(ng-show="edit")
         script(src="/public/scripts/app.js")

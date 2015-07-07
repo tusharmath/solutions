@@ -21,6 +21,12 @@ var AddressBookController = co.wrap(function * (rest, $scope) {
         $scope.create = $scope.edit = false;
     });
 
+    $scope.update = co.wrap(function * () {
+        yield $scope.contact.save();
+        $scope.contacts = yield rest.all('contacts').getList();
+        $scope.create = $scope.edit = false;
+    });
+
 });
 
 AddressBookController.$inject = ['Restangular', '$scope'];
