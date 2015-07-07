@@ -20,7 +20,10 @@ exports.jade = jade.middleware(JADE_OPTIONS);
 exports.render = function * () {
     this.render(this.params.page);
 };
-exports.renderIndex = function * (){
+exports.renderIndex = function * () {
     this.render('index');
 };
-exports.start = (port)=>bragi.log('application', TICK + `server started:${port}`);
+exports.start = (port) => bragi.log('application', TICK + `server started:${port}`);
+exports._404 = function * () {
+    this.throw(404, JSON.stringify({error: 'route not found'}));
+};

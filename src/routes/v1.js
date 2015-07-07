@@ -1,6 +1,7 @@
 "use strict";
 
 var
+    middleware = require('../middleware'),
     router = require('koa-router'),
     controllers = require('./../controllers'),
     v1 = router();
@@ -16,6 +17,6 @@ v1
     .get('/create/contacts', controllers.contacts.create)
     .get('/delete/contacts/:id', controllers.contacts.remove)
 
-
+    .all('*', middleware._404)
 ;
 module.exports = v1.routes();
