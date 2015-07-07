@@ -11,8 +11,9 @@ var
 
 const PORT = 3000;
 pub
+    .use(require('koa-browserify')({root: __dirname}))
     .use(require('koa-less')(__dirname + '/public'))
-    .use(require('koa-static')(__dirname + '/public'))
+    .use(require('koa-static')(__dirname + '/public'));
 
 app
 

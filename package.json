@@ -8,9 +8,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "angular": "^1.4.2",
+    "bootstrap": "^3.3.5",
     "bragi": "^0.1.0",
     "koa": "^0.21.0",
     "koa-body-parser": "^1.1.2",
+    "koa-browserify": "^0.1.0",
     "koa-jade": "^1.1.0",
     "koa-less": "0.0.3",
     "koa-router": "^5.1.2",

@@ -4,5 +4,54 @@ doctype html
 html(lang='en')
     head
         title Solutions with truth
-    body
-        h1 This page should render
+        link(rel="stylesheet" type="text/css" href="/public/less/main.css")
+    body(ng-app="pay-pal")
+        .container-fluid
+            h1 Address Book
+            .panel.panel-default
+                .panel-heading
+                    .row
+                        .col-sm-6
+                            .panel-title
+                                strong All Contacts
+                                a.pull-right.btn.btn-default.btn-sm Create
+                        .col-sm-6
+                            a.btn.pull-right.btn-warning.btn-sm Edit
+                .panel-body
+                    .row
+                        .col-sm-6
+                            div
+                                form
+                                    .form-group
+                                        input.form-control(type="text" placeholder="Search")
+                            div
+                                ul.list-group
+                                    li.list-group-item
+                                        a(href="#") Tushar Mathur
+                                    li.list-group-item
+                                        a(href="#") Ishana Mathur
+                        .col-sm-6
+                            div
+                                h3 John Applessed
+                            div
+                                div
+                                    small.text-info mobile
+                                div (888) 555-5512
+                            hr
+                            div
+                                div
+                                    small.text-info mobile
+                                div (888) 555-5512
+
+                            hr
+                            div
+                                div
+                                    small.text-info email
+                                div tusharmath@gmail.com
+
+                            hr
+                            div
+                                div
+                                    small.text-info address
+                                div 156-2/X Civil Lines Ajmer
+        script(src="/public/scripts/app.js")

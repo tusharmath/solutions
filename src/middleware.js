@@ -8,7 +8,7 @@ var jade = require('koa-jade'),
     bragi = require('bragi');
 
 const TICK = bragi.util.symbols.success,
-    JADE_OPTIONS = {viewPath: __dirname + '/views'}
+    JADE_OPTIONS = {viewPath: __dirname + '/views', noCache: true}
     ;
 
 exports.logger = function *(next) {
