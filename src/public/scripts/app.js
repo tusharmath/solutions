@@ -6,15 +6,19 @@ var angular = require('angular'),
     co = require('co');
 var _ = window._ = require('lodash');
 var rest = require('restangular');
-angular.module('pay-pal', ['restangular'])
+var app = angular.module('pay-pal', ['restangular'])
     .config(['RestangularProvider', function (restP) {
         restP.setBaseUrl('/api/v1');
     }])
     .controller('ContactSearchController', require('./ContactSearchController'))
-    .directive('contactSearch', function () {
-        return {
-            templateUrl: '/templates/contact-search',
-            restrict: 'E',
-            controller: 'ContactSearchController'
-        }
+var _createDirective = _.partial(createDirective, app);
+
+_createDirective('contactSearch');
+function createDirective(app, name) {
+    var templateUrl = `/templates/${_.kebabCase(name)}`,
+        controller = `${_.capitalize(name)}Controller`,
+        restrict = 'E';
+    app.directive(_.camelCase(name), function () {
+        return {templateUrl, restrict, controller};
     });
+}
