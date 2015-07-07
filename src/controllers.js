@@ -9,10 +9,12 @@ var
 
 exports.contacts = {
     find: function *() {
-        this.body = yield Contact.find();
+        this.body = yield Contact.find(this.query);
     },
-    update: function * () {
-        this.body = {status: 200};
+    update: function * (source) {
+        var contacts = _.first(yield Contact.find({_id: this.params.id}));
+        _.assign(contacts.attributes, _.get(this, source));
+        this.body = yield new Contact(contacts.attributes).save();
     },
     remove: function * () {
         this.body = {count: yield Contact.remove({_id: this.params.id})};

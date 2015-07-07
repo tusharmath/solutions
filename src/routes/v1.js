@@ -14,7 +14,7 @@ v1
     .get('/contacts', ContactsCtrl.find)
     .patch('/contacts/:id', sourceBody(ContactsCtrl.update))
     .post('/contacts', sourceBody(ContactsCtrl.create))
-    .delete('/contacts/:id', sourceBody(ContactsCtrl.remove));
+    .delete('/contacts/:id', ContactsCtrl.remove);
 
 /**
  * Extremely useful for debugging in development mode.
@@ -23,7 +23,7 @@ v1
 v1
     .get('/update/contacts/:id', sourceQuery(ContactsCtrl.update))
     .get('/create/contacts', sourceQuery(ContactsCtrl.create, 'query'))
-    .get('/delete/contacts/:id', sourceQuery(ContactsCtrl.remove));
+    .get('/delete/contacts/:id', ContactsCtrl.remove);
 
 /**
  * Handle 404 API Requests
