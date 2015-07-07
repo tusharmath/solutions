@@ -1,37 +1,10 @@
 ##Problem Statement
-
-
-Implement a Bill Manager to track bills among friends
-
-Using HTML/CSS/Javascript, create a page to add, edit and delete "n" number of friends and "n" bills list.
-
-We should be able to link a friend to the bill and split the bill equally to the friends added to that bill.
-
-We should be able to view the list of bills and friends.
-
-Optional Items:
-
-In view mode, Filter/Search to find the friends and bills added.
-
-Use local storage to persist the data
-Note -
-1. Input fields for a bill are given below:
-  a) Expense Description
-  b) Amount
-  c) Friends
-2. Object Oriented JS Code would be a plus.
-  (For reference, you can go through splitwise.com)
-
-Some basic rules to keep in mind
-
-Code should work in multiple browsers (IE, FF and Chrome).
-
-Use native javascript. No third party libraries are allowed.
-
-Once done with the test, mail us back the files in zip format.
-
-If you have any doubts regarding the question, call me on my number  -  08125793656
-
-Regards,
-Mathan.
+1. Create a Node Web Service performing the basic CRUD operations of Address Book. You can use any NoSQL DB to store data
+2. Create an Address Book as shown in the above figure using the API you have created.
+3. The Address Book should contai two panels: Contact list panel and Description pane
+4. On click of the search box, the user is allowed to type the contact of his choice. Results matching first name, last name can be listed out
+5. The Alphabetic hyperlinks in the Contact list panel, lists the contacts matching the alphabet that has been clicked.
+6. The ‘+’ icon allows the user to add new contact. You can collect first name, last name, mobile phone, home phone, email and address. The ‘Edit’ link shows all these details in editable mode. 
+7.The layout should be Responsive across devices and different browsers. For larger screens, both the panels should be shown always. For smaller screens, where the description panel cannot be accommodated, the Contact list panel alone should be shown initially. On click of any of the contacts, the Description panel should be shown, hiding out the other panel
+8. MVC to be used in front end-using JQuery+Backbone.js/AngularJS or you might use plain JavaScript.
 
