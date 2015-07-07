@@ -2,7 +2,7 @@
 
 var
     router = require('koa-router'),
-    controllers = require('./controllers'),
+    controllers = require('./../controllers'),
     v1 = router();
 
 v1

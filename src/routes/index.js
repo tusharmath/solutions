@@ -5,7 +5,7 @@
 var router = require('koa-router'),
     baseRouter = router(),
     v1 = require('./v1'),
-    middleware = require('./middleware');
+    middleware = require('./../middleware');
 
 baseRouter.get('/', middleware.renderIndex);
 baseRouter.get('/views/:page', middleware.render);
