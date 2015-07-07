@@ -18,10 +18,13 @@ var app = angular.module('pay-pal', ['restangular'])
 
 var _createDirective = _.partial(createDirective, app);
 
-_createDirective('contactSearch');
-_createDirective('contactDetails');
-_createDirective('contactCreate');
-_createDirective('contactEdit');
+_.each([
+    'contactSearch',
+    'contactDetails',
+    'contactCreate',
+    'contactEdit'
+], _createDirective);
+
 function createDirective(app, name) {
     var templateUrl = `/templates/${_.kebabCase(name)}`,
         controller = `${_.capitalize(name)}Controller`,

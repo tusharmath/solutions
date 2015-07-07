@@ -5,6 +5,10 @@ html(lang='en')
     head
         title Solutions with truth
         link(rel="stylesheet" type="text/css" href="/public/less/main.css")
+        style.
+            [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+                display: none !important;
+            }
     body(ng-app="pay-pal")
         .container-fluid(ng-controller="AddressBookController")
             h1 Address Book
@@ -14,13 +18,15 @@ html(lang='en')
                         .col-sm-6
                             .panel-title
                                 strong All Contacts
-                                button.btn.pull-right.btn-default.btn-sm(ng-click="create=true") Create
+                                button.btn.pull-right.btn-default.btn-sm(ng-click="create=true; edit=false") Create
                         .col-sm-6
-                            button.btn.pull-right.btn-warning.btn-sm(ng-click="edit=true" ng-hide="edit || create") Edit
-                            button.btn.pull-right.btn-primary.btn-sm(ng-click="edit=true; save()" ng-show="create") Save
-                            button.btn.pull-right.btn-primary.btn-sm(ng-click="edit=true; update()" ng-show="edit") Update
-                            button.btn.pull-right.btn-warning.btn-sm(ng-click="edit=false; create=false" ng-show="edit || create") Cancel
+                            .btn-toolbar
+                                button.btn.pull-right.btn-warning.btn-sm(ng-click="edit=true;create=false" ng-hide="edit || create") Edit
+                                button.btn.pull-right.btn-primary.btn-sm.ng-cloak(ng-click="edit=true; save()" ng-show="create") Save
+                                button.btn.pull-right.btn-primary.btn-sm.ng-cloak(ng-click="edit=true; update()" ng-show="edit") Update
+                                button.btn.pull-right.btn-warning.btn-sm.ng-cloak(ng-click="edit=false; create=false" ng-show="edit || create") Cancel
                 .panel-body
+
                     .row
                         .col-sm-6
                             contact-search
