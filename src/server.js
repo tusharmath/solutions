@@ -9,9 +9,8 @@ var
 const PORT = 3000
     ;
 
-app.use(middleware.logger);
-
 app
+    .use(middleware.logger)
     .use(middleware.jade)
     .use(routes);
 

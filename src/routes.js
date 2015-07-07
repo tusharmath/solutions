@@ -1,9 +1,17 @@
 /**
  * Created by tusharmathur on 7/7/15.
  */
-var router = require('koa-router')(),
+"use strict";
+var router = require('koa-router'),
+    baseRouter = router(),
+    v1 = router(),
     middleware = require('./middleware');
 
-router.get('/', middleware.renderIndex);
-router.get('/views/:page', middleware.render);
-module.exports = router.routes();
+v1.get('/contacts', function *() {
+    this.body = {data: [1, 2, 3, 34]};
+});
+baseRouter.get('/', middleware.renderIndex);
+baseRouter.get('/views/:page', middleware.render);
+baseRouter.use('/api/v1', v1.routes());
+
+module.exports = baseRouter.routes();
