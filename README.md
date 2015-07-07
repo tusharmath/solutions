@@ -8,3 +8,7 @@
 7.The layout should be Responsive across devices and different browsers. For larger screens, both the panels should be shown always. For smaller screens, where the description panel cannot be accommodated, the Contact list panel alone should be shown initially. On click of any of the contacts, the Description panel should be shown, hiding out the other panel
 8. MVC to be used in front end-using JQuery+Backbone.js/AngularJS or you might use plain JavaScript. &#10003
 
+
+#Setup
+1. IO.JSv2.3.3 required.
+2. `node --harmony_arrow_functions src/server.js`
