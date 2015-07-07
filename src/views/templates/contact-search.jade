@@ -9,5 +9,5 @@ div
     strong {{major}}
     span {{ctrl.contacts}}
     ul.list-group
-        li.list-group-item(ng-repeat="c in contacts|filter: searchText")
-            a(href="#") {{c.first_name}}&nbsp;{{c.last_name}}
+        li.list-group-item(ng-repeat="c in contacts | filter: searchText")
+            a.text-capitalize(href="#" ng-click="setSelected(c._id)") {{c.first_name}}&nbsp;{{c.last_name}}

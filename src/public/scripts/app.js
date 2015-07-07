@@ -11,17 +11,18 @@ var app = angular.module('pay-pal', ['restangular'])
         restP.setBaseUrl('/api/v1');
     }])
     .controller('ContactDetailsController', require('./ContactDetailsController'))
-    .controller('ContactSearchController', require('./ContactSearchController'));
+    .controller('ContactSearchController', require('./ContactSearchController'))
+    .controller('AddressBookController', require('./AddressBookController'));
 
 var _createDirective = _.partial(createDirective, app);
 
 _createDirective('contactSearch');
-_createDirective('contactDetails', {id: '='});
-function createDirective(app, name, scope) {
+_createDirective('contactDetails');
+function createDirective(app, name) {
     var templateUrl = `/templates/${_.kebabCase(name)}`,
         controller = `${_.capitalize(name)}Controller`,
         restrict = 'E';
     app.directive(_.camelCase(name), function () {
-        return {templateUrl, restrict, controller, scope};
+        return {templateUrl, restrict, controller};
     });
 }

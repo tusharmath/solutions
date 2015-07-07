@@ -6,7 +6,7 @@ html(lang='en')
         title Solutions with truth
         link(rel="stylesheet" type="text/css" href="/public/less/main.css")
     body(ng-app="pay-pal")
-        .container-fluid
+        .container-fluid(ng-controller="AddressBookController")
             h1 Address Book
             .panel.panel-default
                 .panel-heading
@@ -22,5 +22,5 @@ html(lang='en')
                         .col-sm-6
                             contact-search
                         .col-sm-6
-                           contact-details(id="'559bf1a1ee42dbfa34716cca'")
+                           contact-details
         script(src="/public/scripts/app.js")

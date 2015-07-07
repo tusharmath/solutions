@@ -2,10 +2,9 @@
  * Created by tusharmathur on 7/8/15.
  */
 "use strict";
-var co = require('co');
-var ContactSearchController = co.wrap(function * (rest, $scope) {
-    $scope.contacts = yield rest.all('contacts').getList();
-});
+var co = require('co'),
+    _ = require('lodash');
+var ContactSearchController = function () {
+};
 
-ContactSearchController.$inject = ['Restangular', '$scope'];
 module.exports = ContactSearchController;
