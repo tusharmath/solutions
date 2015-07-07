@@ -8,6 +8,9 @@ var
     Contact = models.Contact;
 
 exports.contacts = {
+    one: function * () {
+        this.body = _.first(yield Contact.find({_id: this.params.id}));
+    },
     find: function *() {
         this.body = yield Contact.find(this.query);
     },

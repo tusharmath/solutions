@@ -12,6 +12,7 @@ var
 
 v1
     .get('/contacts', ContactsCtrl.find)
+    .get('/contacts/:id', ContactsCtrl.one)
     .patch('/contacts/:id', sourceBody(ContactsCtrl.update))
     .post('/contacts', sourceBody(ContactsCtrl.create))
     .delete('/contacts/:id', ContactsCtrl.remove);
