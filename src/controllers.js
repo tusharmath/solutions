@@ -2,7 +2,9 @@
  * Created by tusharmathur on 7/7/15.
  */
 "use strict";
-var models = require('./models'),
+var
+    _ = require('lodash'),
+    models = require('./models'),
     Contact = models.Contact;
 
 exports.contacts = {
@@ -15,8 +17,8 @@ exports.contacts = {
     remove: function * () {
         this.body = {status: 200};
     },
-    create: function * () {
-        var c = new Contact(this.query);
+    create: function * (source) {
+        var c = new Contact(_.get(this, source));
         this.body = yield c.save();
     }
 };

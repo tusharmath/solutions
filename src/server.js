@@ -10,6 +10,7 @@ const PORT = 3000
     ;
 
 app
+    .use(require('koa-body-parser')())
     .use(middleware.logger)
     .use(middleware.jade)
     .use(routes);
