@@ -4,10 +4,10 @@
 div
     form
         .form-group
-            input.form-control(type="text" placeholder="Search")
+            input.form-control(type="text" placeholder="Search" ng-model="searchText")
 div
     strong {{major}}
     span {{ctrl.contacts}}
     ul.list-group
-        li.list-group-item(ng-repeat="c in contacts")
+        li.list-group-item(ng-repeat="c in contacts|filter: searchText")
             a(href="#") {{c.first_name}}&nbsp;{{c.last_name}}
