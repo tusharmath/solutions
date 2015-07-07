@@ -1,16 +1,18 @@
 "use strict";
-var koa = require('koa'),
-    bragi = require('bragi'),
-    app = koa();
+var
+    _ = require('lodash'),
+    koa = require('koa'),
+    app = koa(),
+    routes = require('./routes'),
+    middleware = require('./middleware');
 
-const port = 3000;
+const PORT = 3000
+    ;
 
-// logger
-app.use(function *(next) {
-    yield next;
-    bragi.log('http', bragi.util.print(this.method, 'green'), this.url);
-});
+app.use(middleware.logger);
 
-app.listen(port, function () {
-    bragi.log('application', bragi.util.symbols.success + `server started:${port}`)
-});
+app
+    .use(middleware.jade)
+    .use(routes);
+
+app.listen(PORT, _.partial(middleware.start, PORT));

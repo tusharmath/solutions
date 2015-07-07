@@ -10,6 +10,8 @@
   "dependencies": {
     "bragi": "^0.1.0",
     "koa": "^0.21.0",
+    "koa-jade": "^1.1.0",
+    "koa-router": "^5.1.2",
     "lodash": "^3.10.0"
   }
 }
