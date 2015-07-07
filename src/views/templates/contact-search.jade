@@ -1,0 +1,13 @@
+//
+   Created by tusharmathur on 7/8/15.
+
+div
+    form
+        .form-group
+            input.form-control(type="text" placeholder="Search")
+div
+    strong {{major}}
+    span {{ctrl.contacts}}
+    ul.list-group
+        li.list-group-item(ng-repeat="c in contacts")
+            a(href="#") {{c.first_name}}&nbsp;{{c.last_name}}

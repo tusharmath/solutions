@@ -18,7 +18,7 @@ exports.logger = function *(next) {
 
 exports.jade = jade.middleware(JADE_OPTIONS);
 exports.render = function * () {
-    this.render(this.params.page);
+    this.render('templates/' + this.params.page);
 };
 exports.renderIndex = function * () {
     this.render('index');
