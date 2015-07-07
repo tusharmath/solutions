@@ -11,6 +11,7 @@ var app = angular.module('pay-pal', ['restangular'])
         restP.setBaseUrl('/api/v1');
     }])
     .controller('ContactDetailsController', require('./ContactDetailsController'))
+    .controller('ContactCreateController', require('./ContactCreateController'))
     .controller('ContactSearchController', require('./ContactSearchController'))
     .controller('AddressBookController', require('./AddressBookController'));
 
@@ -18,6 +19,7 @@ var _createDirective = _.partial(createDirective, app);
 
 _createDirective('contactSearch');
 _createDirective('contactDetails');
+_createDirective('contactCreate');
 function createDirective(app, name) {
     var templateUrl = `/templates/${_.kebabCase(name)}`,
         controller = `${_.capitalize(name)}Controller`,

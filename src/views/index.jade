@@ -14,13 +14,17 @@ html(lang='en')
                         .col-sm-6
                             .panel-title
                                 strong All Contacts
-                                a.pull-right.btn.btn-default.btn-sm Create
+                                button.btn.pull-right.btn-default.btn-sm(ng-click="create=true") Create
                         .col-sm-6
-                            a.btn.pull-right.btn-warning.btn-sm Edit
+                            button.btn.pull-right.btn-warning.btn-sm(ng-click="edit=true" ng-hide="edit || create") Edit
+                            button.btn.pull-right.btn-primary.btn-sm(ng-click="edit=true; save()" ng-show="create") Save
+                            button.btn.pull-right.btn-primary.btn-sm(ng-click="edit=true" ng-show="edit") Update
+                            button.btn.pull-right.btn-warning.btn-sm(ng-click="edit=false; create=false" ng-show="edit || create") Cancel
                 .panel-body
                     .row
                         .col-sm-6
                             contact-search
                         .col-sm-6
-                           contact-details
+                            contact-details(ng-hide="edit || create")
+                            contact-create(ng-show="create")
         script(src="/public/scripts/app.js")
