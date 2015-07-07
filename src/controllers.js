@@ -15,7 +15,7 @@ exports.contacts = {
         this.body = {status: 200};
     },
     remove: function * () {
-        this.body = {status: 200};
+        this.body = {count: yield Contact.remove({_id: this.params.id})};
     },
     create: function * (source) {
         var c = new Contact(_.get(this, source));
