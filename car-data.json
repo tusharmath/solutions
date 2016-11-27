@@ -1,0 +1,114 @@
+[
+  {
+    "brand": "ford",
+    "model": "figo",
+    "type": "hatchback",
+    "transmission": "manual",
+    "pricePerHour": 114,
+    "distanceKMS": 4,
+    "seater": 5,
+    "airBags": 2,
+    "availability": {
+      "startDate": "1475295987000",
+      "endDate": "1477887987000"
+    }
+  },
+  {
+    "brand": "maruti",
+    "model": "swift",
+    "type": "hatchback",
+    "transmission": "manual",
+    "pricePerHour": 116,
+    "distanceKMS": 20,
+    "seater": 5,
+    "airBags": 2,
+    "availability": {
+      "startDate": "1475295987000",
+      "endDate": "1477887987000"
+    }
+  },
+  {
+    "brand": "tata",
+    "model": "nano",
+    "type": "hatchback",
+    "transmission": "manual",
+    "pricePerHour": 98,
+    "distanceKMS": 3,
+    "seater": 4,
+    "airBags": 0,
+    "availability": {
+      "startDate": "1475295987000",
+      "endDate": "1477887987000"
+    }
+  },
+  {
+    "brand": "maruti",
+    "model": "ritz",
+    "type": "hatchback",
+    "transmission": "automatic",
+    "pricePerHour": 102,
+    "distanceKMS": 15,
+    "seater": 5,
+    "airBags": 0,
+    "availability": {
+      "startDate": "1475295987000",
+      "endDate": "1477887987000"
+    }
+  },
+  {
+    "brand": "toyato",
+    "model": "fortuner",
+    "type": "suv",
+    "transmission": "manual",
+    "pricePerHour": 160,
+    "distanceKMS": 8,
+    "seater": 7,
+    "airBags": 4,
+    "availability": {
+      "startDate": "1475295987000",
+      "endDate": "1477887987000"
+    }
+  },
+  {
+    "brand": "mahindra",
+    "model": "scorpio",
+    "type": "suv",
+    "transmission": "manual",
+    "pricePerHour": 154,
+    "distanceKMS": 9,
+    "seater": 7,
+    "airBags": 4,
+    "availability": {
+      "startDate": "1475295987000",
+      "endDate": "1477887987000"
+    }
+  },
+  {
+    "brand": "fiat",
+    "model": "punto",
+    "type": "hatchback",
+    "transmission": "manual",
+    "pricePerHour": 124,
+    "distanceKMS": 26,
+    "seater": 5,
+    "airBags": 2,
+    "availability": {
+      "startDate": "1475468787000",
+      "endDate": "1477715187000"
+    }
+  },
+  {
+    "brand": "toyato",
+    "model": "etios",
+    "type": "sedan",
+    "transmission": "automatic",
+    "pricePerHour": 133,
+    "distanceKMS": 23,
+    "seater": 5,
+    "airBags": 2,
+    "availability": {
+      "startDate": "1475468787000",
+      "endDate": "1477715187000"
+    }
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "observable-air": "^1.20.3",
+    "preact": "^6.4.0",
+    "ramda": "^0.22.1",
+    "snabbdom": "^0.5.4",
+    "systemjs": "^0.19.41"
+  }
+}

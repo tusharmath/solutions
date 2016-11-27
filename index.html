@@ -1,0 +1,22 @@
+<html>
+<head>
+    <link rel="stylesheet" href="src/zoom-car.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <script src="node_modules/systemjs/dist/system.js"></script>
+    <script>
+      SystemJS.defaultJSExtensions = true;
+      SystemJS.config({
+        paths: {
+          '*': 'node_modules/*',
+          'src/*': 'src/*'
+        },
+        packageConfigPaths: ['./node_modules/*/package.json']
+      })
+    </script>
+    <script>SystemJS.import('src/zoom-car.js');</script>
+</head>
+<body>
+<div id="container"></div>
+</body>
+</html>
