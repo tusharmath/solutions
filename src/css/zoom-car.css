@@ -3,6 +3,7 @@
 @import "dialog.css";
 @import "buttons.css";
 @import "input.css";
+@import "overlay.css";
 
 body {
     font-family: 'Roboto', sans-serif;

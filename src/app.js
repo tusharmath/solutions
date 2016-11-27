@@ -6,9 +6,9 @@
 
 const R = require('ramda')
 const O = require('observable-air')
-const view = require('./view')
-const t = require('./tasks')
-const {Dispatcher} = require('./dispatcher')
+const view = require('./views/Main')
+const t = require('./Tasks')
+const {Dispatcher} = require('./Dispatcher')
 
 const targetValue = R.path(['target', 'value'])
 const setDistance = R.compose(R.assoc('distance'), Number, targetValue)
