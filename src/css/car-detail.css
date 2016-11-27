@@ -1,0 +1,31 @@
+.car-list .car-card .details {
+    font-size: 0.8em;
+    color: #888;
+    display: flex;
+    flex-direction: row;
+}
+
+.car-list .car-card .model {
+    padding: 6px;
+    text-transform: capitalize;
+}
+
+.car-list .car-card .details .detail-item {
+    padding: 6px;
+}
+
+.car-list .car-card .price-per-hour {
+    font-size: 2em;
+    color: #0F0;
+    font-weight: 400;
+    text-align: center;
+}
+
+.car-list .car-card .distance {
+    color: #28b128;
+    text-align: center;
+}
+
+.car-list .car-card .wide-col {
+    flex-grow: 1;
+}

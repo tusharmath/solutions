@@ -1,5 +1,11 @@
+@import "filter-header.css";
+@import "car-card.css";
+
 body {
     font-family: 'Roboto', sans-serif;
+    color: #333;
+    font-weight: 300;
+    background-color: #F9F9F9;
 }
 
 html, body {
@@ -20,4 +26,18 @@ html, body {
     display: flex;
     align-items: center;
     padding: 10px;
+}
+
+.content {
+    margin: 30px auto auto;
+    max-width: 600px;
+}
+
+
+.material-checkbox {
+    height: 50px;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
