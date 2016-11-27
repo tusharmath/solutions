@@ -12,6 +12,15 @@ const MaterialCheckBox = (enabled) => h('div.material-checkbox', [
 ])
 
 const numFormat = Intl.NumberFormat('en-IN')
+const filterCars = model => {
+  const matches = R.allPass([
+    car => car.distanceKMS < model.distance,
+    car => model.type === 'any' || car.type === model.type,
+    car => Number(car.availability.startDate) <= model.startDate,
+    car => Number(car.availability.endDate) >= model.endDate
+  ])
+  return R.filter(matches, model.cars)
+}
 const Cars = (dispatcher, model) =>
   R.map(car => h('div.car-card', {on: {click: dispatcher.of('select').listen.bind(null, car)}}, [
     MaterialCheckBox(model.selected === car),
@@ -31,7 +40,7 @@ const Cars = (dispatcher, model) =>
         `${car.distanceKMS} Kms`
       ])
     ])
-  ]), model.cars)
+  ]), filterCars(model))
 
 const UniqCarTypes = R.compose(R.uniq, R.pluck('type'))
 const CarType = R.map(type => h('option', type))
@@ -40,18 +49,18 @@ const FilterHeader = (dispatcher, model) => h('div.filter-header', [
   h('div.filter-row', [
     h('div.filter', [
       h('div.small', 'START DATE'),
-      h('input', {props: {type: 'date'}, on: {change: dispatcher.of('startDate').listen}})
+      h('input', {props: {type: 'date', valueAsDate: new Date(1475295987000)}, on: {change: dispatcher.of('startDate').listen}})
     ]),
     h('div.filter', [
       h('div.small', 'END DATE'),
-      h('input', {props: {type: 'date'}, on: {change: dispatcher.of('endDate').listen}})
+      h('input', {props: {type: 'date', valueAsDate: new Date(1477887987000)}, on: {change: dispatcher.of('endDate').listen}})
     ])
   ]),
   h('div.filter-row', [
     h('div.filter', [
       h('div.small', `DISTANCE ${model.distance} Kms`),
       h('input', {
-        props: {type: 'range', min: 1, max: 15, step: 1, value: 8},
+        props: {type: 'range', min: 1, max: 50, step: 1, value: 50},
         on: {change: dispatcher.of('distance').listen}
       })
     ]),
