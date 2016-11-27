@@ -24,8 +24,9 @@ class Fetch {
 
   run () {
     fetch(this.url)
-      .then(response => {
-        this.response$.next(response)
+      .then(r => r.json())
+      .then(json => {
+        this.response$.next(json)
         this.response$.complete()
       })
       .catch(err => {

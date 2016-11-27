@@ -36,7 +36,7 @@ const Cars = (dispatcher, model) =>
 const UniqCarTypes = R.compose(R.uniq, R.pluck('type'))
 const CarType = R.map(type => h('option', type))
 
-const FilterHeader = (cars) => h('div.filter-header', [
+const FilterHeader = (dispatcher, cars) => h('div.filter-header', [
   h('div.filter-row', [
     h('div.filter', [
       h('div.small', 'START DATE'),
@@ -50,7 +50,7 @@ const FilterHeader = (cars) => h('div.filter-header', [
   h('div.filter-row', [
     h('div.filter', [
       h('div.small', 'DISTANCE'),
-      h('input', {props: {type: 'range'}})
+      h('input', {props: {type: 'range', min: 1, max: 15, step: 1, value: 0}, on: {change: dispatcher.of('distance').listen}})
     ]),
     h('div.filter', [
       h('div.small', 'TYPE'),
@@ -78,7 +78,7 @@ module.exports = (dispatcher, model) => {
   return h('div', [
     h('div.nav-main', ['Zoom Car Rentals']),
     h('div.content', [
-      FilterHeader(model.cars),
+      FilterHeader(dispatcher, model.cars),
       h('div.car-list', Cars(dispatcher, model))
     ]),
     model.selected ? Confirmation(dispatcher, model.selected) : '  '
