@@ -28,7 +28,7 @@ function main () {
     O.map(setStartDate, Dispatcher.select('startDate', root$)),
     O.map(setEndDate, Dispatcher.select('endDate', root$))
   )
-  const model$ = O.scan((a, b) => a(b), {}, reducer$)
+  const model$ = O.scan((a, b) => a(b), {distance: 8}, reducer$)
 
   O.forEach(x => console.log(x), model$)
 
