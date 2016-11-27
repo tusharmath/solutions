@@ -1,5 +1,7 @@
 @import "filter-header.css";
 @import "car-card.css";
+@import "dialog.css";
+@import "buttons.css";
 
 body {
     font-family: 'Roboto', sans-serif;

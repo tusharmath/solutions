@@ -1,0 +1,14 @@
+.btn {
+    padding: 10px;
+    margin: 2px;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.btn.warning {
+    color: #00ce00
+}
+
+.btn.primary {
+    color: #646bc5
+}
