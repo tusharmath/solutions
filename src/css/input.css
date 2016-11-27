@@ -1,0 +1,10 @@
+input {
+    background-color: transparent;
+    border: none;
+    padding: 8px 0
+}
+
+input:focus {
+    outline: none;
+}
+

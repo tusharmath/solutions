@@ -36,14 +36,29 @@ const Cars = (dispatcher, model) =>
 const UniqCarTypes = R.compose(R.uniq, R.pluck('type'))
 const CarType = R.map(type => h('option', type))
 
-const FilterHeader = (cars) => {
-  return h('div.filter-header', [
-    h('h3', ['Available Cars']),
-    h('div.filters', [
+const FilterHeader = (cars) => h('div.filter-header', [
+  h('div.filter-row', [
+    h('div.filter', [
+      h('div.small', 'START DATE'),
+      h('input', {props: {type: 'date'}})
+    ]),
+    h('div.filter', [
+      h('div.small', 'END DATE'),
+      h('input', {props: {type: 'date'}})
+    ])
+  ]),
+  h('div.filter-row', [
+    h('div.filter', [
+      h('div.small', 'DISTANCE'),
+      h('input', {props: {type: 'range'}})
+    ]),
+    h('div.filter', [
+      h('div.small', 'TYPE'),
       h('select', CarType(R.prepend('any', UniqCarTypes(cars))))
     ])
   ])
-}
+])
+
 
 function Confirmation (dispatcher, car) {
   const props = {on: {click: dispatcher.of('select').listen.bind(null, undefined)}};

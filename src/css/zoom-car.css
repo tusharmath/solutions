@@ -2,6 +2,7 @@
 @import "car-card.css";
 @import "dialog.css";
 @import "buttons.css";
+@import "input.css";
 
 body {
     font-family: 'Roboto', sans-serif;
@@ -42,4 +43,12 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.small {
+    font-size: 0.8em;
+}
+
+input, select {
+    font-size: 1rem;
 }
