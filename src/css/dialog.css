@@ -15,3 +15,7 @@
     flex-direction: row;
     justify-content: flex-end;
 }
+
+h4 {
+    text-transform: capitalize;
+}

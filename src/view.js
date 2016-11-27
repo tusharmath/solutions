@@ -45,18 +45,18 @@ const FilterHeader = (cars) => {
   ])
 }
 
-function Confirmation (dispatcher) {
+function Confirmation (dispatcher, car) {
   const props = {on: {click: dispatcher.of('select').listen.bind(null, undefined)}};
   return h('div.confirmation', [
     h('div.dialog', [
-      h('h4', ['Confirm booking?']),
+      h('h4', [`Confirm ${car.brand} ${car.model} booking?`]),
       h('p', ['I agree to terms and condition, is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.']),
       h('div.footer', [
         h('div.btn.btn-link.warning', props, ['AGREE']),
         h('div.btn.btn-link.primary', props, ['DISAGREE'])
       ]),
     ])
-  ]);
+  ])
 }
 module.exports = (dispatcher, model) => {
 
@@ -66,6 +66,6 @@ module.exports = (dispatcher, model) => {
       FilterHeader(model.cars),
       h('div.car-list', Cars(dispatcher, model))
     ]),
-    model.selected ? Confirmation(dispatcher) : '  '
+    model.selected ? Confirmation(dispatcher, model.selected) : '  '
   ])
 }
