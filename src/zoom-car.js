@@ -10,6 +10,11 @@ const view = require('./view')
 const t = require('./tasks')
 const {Dispatcher} = require('./dispatcher')
 
+const targetValue = R.path(['target', 'value'])
+const setDistance = R.compose(R.assoc('distance'), Number, targetValue)
+const setType = R.compose(R.assoc('type'), targetValue)
+const setStartDate = R.compose(R.assoc('startDate'), Date.parse, targetValue)
+const setEndDate = R.compose(R.assoc('endDate'), Date.parse, targetValue)
 
 function main () {
   const dispatcher = Dispatcher.of('@@root')
@@ -18,7 +23,10 @@ function main () {
   const reducer$ = O.merge(
     O.map(R.assoc('cars'), data.response$),
     O.map(R.assoc('selected'), Dispatcher.select('select', root$)),
-    O.map(R.compose(R.assoc('distance'), Number, R.path(['target', 'value'])), Dispatcher.select('distance', root$))
+    O.map(setDistance, Dispatcher.select('distance', root$)),
+    O.map(setType, Dispatcher.select('type', root$)),
+    O.map(setStartDate, Dispatcher.select('startDate', root$)),
+    O.map(setEndDate, Dispatcher.select('endDate', root$))
   )
   const model$ = O.scan((a, b) => a(b), {}, reducer$)
 

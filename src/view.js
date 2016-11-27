@@ -40,11 +40,11 @@ const FilterHeader = (dispatcher, cars) => h('div.filter-header', [
   h('div.filter-row', [
     h('div.filter', [
       h('div.small', 'START DATE'),
-      h('input', {props: {type: 'date'}})
+      h('input', {props: {type: 'date'}, on: {change: dispatcher.of('startDate').listen}})
     ]),
     h('div.filter', [
       h('div.small', 'END DATE'),
-      h('input', {props: {type: 'date'}})
+      h('input', {props: {type: 'date'}, on: {change: dispatcher.of('endDate').listen}})
     ])
   ]),
   h('div.filter-row', [
@@ -54,7 +54,7 @@ const FilterHeader = (dispatcher, cars) => h('div.filter-header', [
     ]),
     h('div.filter', [
       h('div.small', 'TYPE'),
-      h('select', CarType(R.prepend('any', UniqCarTypes(cars))))
+      h('select', {on: {change: dispatcher.of('type').listen}}, CarType(R.prepend('any', UniqCarTypes(cars))))
     ])
   ])
 ])
@@ -65,7 +65,7 @@ function Confirmation (dispatcher, car) {
   return h('div.confirmation', [
     h('div.dialog', [
       h('h4', [`Confirm ${car.brand} ${car.model} booking?`]),
-      h('p', ['I agree to terms and condition, is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.']),
+      h('p', ['Is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.']),
       h('div.footer', [
         h('div.btn.btn-link.warning', props, ['AGREE']),
         h('div.btn.btn-link.primary', props, ['DISAGREE'])
