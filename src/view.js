@@ -11,6 +11,7 @@ const MaterialCheckBox = (enabled) => h('div.material-checkbox', [
   h('i.material-icons', [enabled ? 'check_box' : 'check_box_outline_blank'])
 ])
 
+const numFormat = Intl.NumberFormat('en-IN')
 const Cars = (dispatcher, model) =>
   R.map(car => h('div.car-card', {on: {click: dispatcher.of('select').listen.bind(null, car)}}, [
     MaterialCheckBox(model.selected === car),
@@ -24,10 +25,10 @@ const Cars = (dispatcher, model) =>
     ]),
     h('div', [
       h('div.price-per-hour', [
-        '₹ ' + car.pricePerHour
+        '₹ ' + numFormat.format(car.pricePerHour * 24)
       ]),
       h('div.distance', [
-        '4kms'
+        `${car.distanceKMS} Kms`
       ])
     ])
   ]), model.cars)
