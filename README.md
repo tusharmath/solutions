@@ -1,4 +1,6 @@
 ##Housing.com
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/tusharmath/solutions.svg)](https://greenkeeper.io/)
 WAP to mimic DOM tree and the operations on it, without using an actual DOM.
 
 0. Multi paradigm approach: Functional + Object Oriented
